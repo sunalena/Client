@@ -14,8 +14,6 @@ import {
   CardSubtitle
 } from 'reactstrap'
 
-import logo from '../../logo.svg'
-
 class LinkItem extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.nodeId !== nextProps.nodeId
@@ -28,14 +26,14 @@ class LinkItem extends Component {
   ) : null
 
   render() {
+    console.log('renderLink')
     const {
       loading = false,
       title,
       way,
-      author,
+      author = {},
       preview,
-      imageUrl,
-      measure
+      imageUrl
     } = this.props
     if (loading)
       return (
@@ -52,15 +50,13 @@ class LinkItem extends Component {
           <CardBody>
             <CardTitle>{title}</CardTitle>
             <CardSubtitle>
-              {author && author.fullName ? (
+              {author.fullName && (
                 <div>
                   posted by
                   <Link to={`/persons/${author.id}`}>{` ${
                     author.fullName
                   }`}</Link>
                 </div>
-              ) : (
-                ''
               )}
             </CardSubtitle>
             <CardText>
@@ -72,15 +68,16 @@ class LinkItem extends Component {
             </CardText>
             {this.bottomNavigation}
           </CardBody>
-          <CardImg
-            onLoad={measure}
-            bottom
-            width="100%"
-            // height={imageUrl ? null : 0}
-            // src={imageUrl ? imageUrl : logo}
-            src={logo}
-            alt="Card image cap"
-          />
+          {imageUrl && (
+            <CardImg
+              // onLoad={measure}
+              bottom
+              width="100%"
+              // height={imageUrl ? null : 0}
+              src={imageUrl}
+              alt="Card image cap"
+            />
+          )}
         </Card>
         <div className={'row mb-2'} />
       </Fragment>

@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
+import InfiniteScroll from 'react-infinite-scroller'
 
-import InfiniteScrollList from '../common/InfiniteScrollList'
 import Loader from '../common/Loader'
 import LinkItem from './LinkItem'
 
@@ -13,34 +13,34 @@ class LinksList extends Component {
   // shouldComponentUpdate({ loading }, nextState) {
   //   return loading !== this.props.loading
   // }
-
-  renderLink = ({ key, style, content, ...rest }) => (
-    <div key={key} style={style}>
-      <LinkItem {...rest} {...content} userId={this.props.userId} />
-    </div>
+  renderLink = ({ id, content, ...rest }) => (
+    <LinkItem key={id} {...rest} {...content} userId={this.props.userId} />
   )
 
   render() {
-    const { loading, userId, ...props } = this.props
-    return loading ? (
-      <Loader />
-    ) : (
-      <InfiniteScrollList {...props} render={this.renderLink} />
+    const { loading, error, mainQuery, loadMore } = this.props
+    if (loading) return <Loader />
+    if (error) return <h3>Error</h3>
+
+    const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
+    return (
+      <InfiniteScroll
+        loadMore={loadMore}
+        hasMore={hasNextPage}
+        initialLoad={false}
+        loader={<p key={'00'}>Loading...</p>}
+      >
+        {nodes.map(this.renderLink)}
+      </InfiniteScroll>
     )
   }
 }
 
-const __typename = 'LinkConnection'
-
 const ALL_POSTS = gql`
   query searchLink($searchValue: String!, $first: Int!, $after: Cursor) {
     mainQuery: searchLink(search: $searchValue, first: $first, after: $after) {
-      totalCount
-      edges {
-        cursor
-        node {
-          ...Link
-        }
+      nodes {
+        ...Link
       }
       pageInfo {
         endCursor
@@ -56,30 +56,40 @@ const props = ({ data: { loading, error, mainQuery, fetchMore } }) => ({
   error,
   fetchMore,
   mainQuery,
-  __typename
+  loadMore: () =>
+    fetchMore({
+      variables: { after: mainQuery.pageInfo.endCursor },
+      updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
+        const previousMainQuery = previousResult.mainQuery || {}
+        const currentMainQuery = fetchMoreResult.mainQuery || {}
+        const previousNodes = previousMainQuery.nodes || []
+        const currentNodes = currentMainQuery.nodes || []
+        return {
+          ...previousResult,
+          mainQuery: {
+            ...previousMainQuery,
+            nodes: [...previousNodes, ...currentNodes],
+            pageInfo: currentMainQuery.pageInfo
+          }
+        }
+      }
+    })
 })
 
 const configObject = {
   options: ({ endCursor, searchValue = '' }) => ({
-    variables: {
-      first: 16,
-      after: endCursor || null,
-      searchValue
-    }
+    variables: { searchValue, first: 5 }
     // fetchPolicy: 'network-only'
   }),
-  force: true,
+  // force: true,
   props
 }
 
-const mapStateToProps = ({ navBar, auth }) => ({
-  // searchValue: 'Asperiores',
+const mapState = ({ navBar, auth }) => ({
   searchValue: '',
-
   userId: auth.userId
 })
 
-export default compose(
-  connect(mapStateToProps),
-  graphql(ALL_POSTS, configObject)
-)(LinksList)
+export default compose(connect(mapState), graphql(ALL_POSTS, configObject))(
+  LinksList
+)

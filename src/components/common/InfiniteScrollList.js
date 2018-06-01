@@ -8,84 +8,87 @@ import {
   WindowScroller
 } from 'react-virtualized'
 
-const loadMoreRows = ({ __typename, fetchMore, mainQuery }) => ({
-  startIndex,
-  stopIndex
-}) =>
-  fetchMore({
-    variables: {
-      after: mainQuery.pageInfo.endCursor,
-      first: stopIndex - startIndex + 1
-    },
-    updateQuery: (previousResult, { fetchMoreResult }) => {
-      const totalCount = fetchMoreResult.mainQuery.totalCount
-      const newEdges = fetchMoreResult.mainQuery.edges
-      const pageInfo = fetchMoreResult.mainQuery.pageInfo
-      return {
-        mainQuery: {
-          __typename,
-          totalCount,
-          edges: [...previousResult.mainQuery.edges, ...newEdges],
-          pageInfo
-        }
-      }
-    }
-  })
-
-const _isRowLoaded = virtualizingList => ({ index }) =>
-  !!virtualizingList[index]
-
-const _noRowsRenderer = () => <h1>No Links....</h1>
-
-const _rowRenderer = ({ virtualizingList, render, cache }) => ({
-  index,
-  key,
-  parent,
-  style: { left, height, ...style },
-  columnIndex
-}) => {
-  const content = measure =>
-    render({
-      key,
-      style,
-      onLoad: measure,
-      content:
-        index < virtualizingList.length
-          ? virtualizingList[index].node
-          : { loading: true }
-    })
-
-  return (
-    <CellMeasurer
-      cache={cache}
-      columnIndex={columnIndex}
-      key={key}
-      parent={parent}
-      rowIndex={index}
-      children={({ measure }) => content(measure)}
-    />
-  )
-}
-
 const intialCache = {
   minHeight: 140,
   defaultHeight: 200,
-  fixedWidth: true
+  fixedWidth: true,
+  fixedHeight: false
+}
+
+const listStyle = {
+  width: '100%'
 }
 
 class InfiniteScrollList extends Component {
+  cache = new CellMeasurerCache(intialCache)
+
+  loadMoreRows = async ({ startIndex, stopIndex }) => {
+    // console.log('loadMoreRows', startIndex, stopIndex)
+    const { __typename, fetchMore, mainQuery } = this.props
+    fetchMore({
+      variables: {
+        after: mainQuery.pageInfo.endCursor,
+        first: stopIndex - startIndex + 1
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const {
+          totalCount,
+          edges: newEdges,
+          pageInfo
+        } = fetchMoreResult.mainQuery
+
+        return {
+          mainQuery: {
+            __typename,
+            totalCount,
+            edges: [...previousResult.mainQuery.edges, ...newEdges],
+            pageInfo
+          }
+        }
+      }
+    })
+  }
+
+  _isRowLoaded = ({ index }) => !!this.props.mainQuery.edges[index]
+
+  _noRowsRenderer = () => <h1>No Links....</h1>
+
+  _rowRenderer = ({ index, key, parent, style, columnIndex, isVisible }) => {
+    const { mainQuery, render } = this.props
+    const virtualizingList = mainQuery.edges
+    return (
+      <CellMeasurer
+        cache={this.cache}
+        columnIndex={0}
+        key={key}
+        parent={parent}
+        rowIndex={index}
+      >
+        {({ measure }) =>
+          render({
+            key,
+            style,
+            measure,
+            isVisible,
+            content:
+              index < virtualizingList.length
+                ? virtualizingList[index].node
+                : { loading: true }
+          })
+        }
+      </CellMeasurer>
+    )
+  }
   render() {
-    const { __typename, fetchMore, mainQuery, render } = this.props
+    const { mainQuery } = this.props
     if (!mainQuery) {
       console.log('mainQuery', 'undefined')
       return <div />
     }
-    const virtualizingList = mainQuery.edges
-    // const cache = new CellMeasurerCache(intialCache)
     return (
       <InfiniteLoader
-        isRowLoaded={_isRowLoaded(virtualizingList)}
-        loadMoreRows={loadMoreRows({ __typename, fetchMore, mainQuery })}
+        isRowLoaded={this._isRowLoaded}
+        loadMoreRows={this.loadMoreRows}
         rowCount={mainQuery.totalCount}
         threshold={8}
         minimumBatchSize={16}
@@ -93,30 +96,23 @@ class InfiniteScrollList extends Component {
         {({ onRowsRendered, registerChild }) => (
           <WindowScroller>
             {({ height, width, isScrolling, onChildScroll, scrollTop }) => {
-              const cache = new CellMeasurerCache(intialCache)
+              this.cache.clearAll()
               return (
                 <List
-                  style={{
-                    width: '100%'
-                  }}
-                  // deferredMeasurementCache={cache}
+                  style={listStyle}
                   autoHeight
                   height={height}
                   width={width}
                   onRowsRendered={onRowsRendered}
-                  noRowsRenderer={_noRowsRenderer}
+                  noRowsRenderer={this._noRowsRenderer}
                   ref={registerChild}
                   isScrolling={isScrolling}
                   onScroll={onChildScroll}
                   rowCount={mainQuery.totalCount}
-                  rowHeight={cache.rowHeight}
-                  rowRenderer={_rowRenderer({
-                    virtualizingList,
-                    render,
-                    cache
-                  })}
+                  rowHeight={this.cache.rowHeight}
+                  rowRenderer={this._rowRenderer}
                   scrollTop={scrollTop}
-                  overscanRowCount={8}
+                  overscanRowCount={0}
                 />
               )
             }}

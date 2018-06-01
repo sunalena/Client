@@ -76,8 +76,9 @@ class LinkItem extends Component {
             onLoad={measure}
             bottom
             width="100%"
-            height={imageUrl ? null : 0}
-            src={imageUrl ? imageUrl : logo}
+            // height={imageUrl ? null : 0}
+            // src={imageUrl ? imageUrl : logo}
+            src={logo}
             alt="Card image cap"
           />
         </Card>

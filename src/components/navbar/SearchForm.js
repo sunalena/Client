@@ -1,7 +1,6 @@
 import React from 'react'
-import { Form, FormGroup, Input, InputGroup, InputGroupAddon } from 'reactstrap'
+import { Form, FormGroup, Input, InputGroup } from 'reactstrap'
 import ModalMessage from '../common/ModalMessage'
-import { IconSearch } from '../icons'
 
 export default class SearchForm extends React.Component {
   state = {
@@ -33,9 +32,6 @@ export default class SearchForm extends React.Component {
               value={this.state.value}
               onChange={this.handleChange}
             />
-          <InputGroupAddon>
-            <IconSearch />
-          </InputGroupAddon>
           </InputGroup>
         </FormGroup>
         <ModalMessage

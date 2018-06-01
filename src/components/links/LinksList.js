@@ -22,7 +22,6 @@ class LinksList extends Component {
 
   render() {
     const { loading, userId, ...props } = this.props
-    console.log('props', props)
     return loading ? (
       <Loader />
     ) : (
@@ -34,8 +33,8 @@ class LinksList extends Component {
 const __typename = 'LinkConnection'
 
 const ALL_POSTS = gql`
-  query searchLink($first: Int!, $after: Cursor) {
-    mainQuery: allLinks(first: $first, after: $after) {
+  query searchLink($searchValue: String!, $first: Int!, $after: Cursor) {
+    mainQuery: searchLink(search: $searchValue, first: $first, after: $after) {
       totalCount
       edges {
         cursor
@@ -64,8 +63,8 @@ const configObject = {
   options: ({ endCursor, searchValue = '' }) => ({
     variables: {
       first: 16,
-      after: endCursor || null
-      // searchValue
+      after: endCursor || null,
+      searchValue
     }
     // fetchPolicy: 'network-only'
   }),

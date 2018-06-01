@@ -9,7 +9,6 @@ import {
   Nav,
   NavItem
 } from 'reactstrap'
-// import Headroom from 'react-headroom'
 import SearchForm from './SearchForm'
 import User from './UserContainer'
 import { IconLink } from '../icons'
@@ -49,7 +48,7 @@ export default class Example extends React.Component {
               Users
             </NavbarBrand>
             <NavItem>
-              {/* <SearchForm /> */}
+              <SearchForm />
             </NavItem>
           </Nav>
           <User />

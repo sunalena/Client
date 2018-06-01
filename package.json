@@ -5,7 +5,7 @@
   "dependencies": {
     "apollo-client-preset": "^1.0.5",
     "apollo-link-error": "^1.0.3",
-    "bootstrap": "^4.0.0-beta.2",
+    "bootstrap": "^4.1.1",
     "graphql": "^0.11.7",
     "graphql-tag": "^2.6.0",
     "react": "^16.2.0",
@@ -14,8 +14,8 @@
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
-    "react-virtualized": "^9.18.5",
-    "reactstrap": "next",
+    "react-virtualized": "^9.19.1",
+    "reactstrap": "6.0.1",
     "redux": "^3.7.2"
   },
   "scripts": {
@@ -28,5 +28,9 @@
   "proxy": "http://localhost:4000",
   "devDependencies": {
     "redux-devtools": "^3.4.1"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
   }
 }

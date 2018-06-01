@@ -10,8 +10,6 @@ import SignupPage from './components/signup'
 import NotFoundPage from './components/NotFoundPage'
 import LinksPage from './components/links'
 import TagsPage from './components/tags'
-import PeopleList from './components/PeopleList'
-
 
 const App = () => (
   <div>
@@ -26,7 +24,6 @@ const App = () => (
             <Route exact path="/signin/" component={SigninPage} />
             <Route exact path="/signup/" component={SignupPage} />
             <Route exact path="/instruction/" component={InstructionPage} />
-            <Route exact path="/users/"  component={PeopleList} />            
             <Redirect from="/signout" to="/signin" />
             <Route component={NotFoundPage} />
           </Switch>

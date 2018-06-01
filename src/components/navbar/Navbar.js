@@ -49,7 +49,7 @@ export default class Example extends React.Component {
               Users
             </NavbarBrand>
             <NavItem>
-              <SearchForm />
+              {/* <SearchForm /> */}
             </NavItem>
           </Nav>
           <User />

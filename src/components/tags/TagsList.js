@@ -1,6 +1,6 @@
 import React from 'react'
 import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import gql from 'graphql-tag.macro'
 import { Link } from 'react-router-dom'
 
 import { ListGroup } from 'reactstrap'

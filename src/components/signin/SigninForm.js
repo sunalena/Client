@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { withApollo, graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import gql from 'graphql-tag.macro'
 
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import { signinSuccess } from '../../redux/modules/auth'

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import gql from 'graphql-tag.macro'
 import { Form, FormGroup, Label, Input, ListGroup } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
@@ -15,7 +15,9 @@ class TagForm extends React.Component {
 
   handleSubmit = async event => {
     event.preventDefault()
-    const { name: { value: name } } = event.target.elements
+    const {
+      name: { value: name }
+    } = event.target.elements
     const { data } = await this.props.createTag({ name })
     if (data.createTag.tag)
       this.setState({

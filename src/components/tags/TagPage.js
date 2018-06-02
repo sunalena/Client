@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import gql from 'graphql-tag.macro'
 import {
   Form,
   FormGroup,
@@ -49,7 +49,9 @@ class TagPage extends Component {
   }
 
   render() {
-    const { data: { loading, tag } } = this.props
+    const {
+      data: { loading, tag }
+    } = this.props
     return loading ? (
       <Loader />
     ) : (
@@ -107,7 +109,11 @@ const CREATE_WORD_MUTATION = gql`
 `
 
 const config = {
-  options: ({ match: { params: { tagId: id } } }) => ({
+  options: ({
+    match: {
+      params: { tagId: id }
+    }
+  }) => ({
     variables: { id },
     fetchPolicy: 'network-only'
   })

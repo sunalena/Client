@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 
 import { Link } from 'react-router-dom'
 
-import gql from 'graphql-tag'
+import gql from 'graphql-tag.macro'
 
 import Loader from '../common/Loader'
 import {

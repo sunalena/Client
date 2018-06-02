@@ -1,6 +1,6 @@
 import React from 'react'
 import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import gql from 'graphql-tag.macro'
 
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
 

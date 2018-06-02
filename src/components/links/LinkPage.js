@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import gql from 'graphql-tag.macro'
 
 import Loader from '../common/Loader'
 
@@ -11,7 +11,9 @@ class LinkPage extends Component {
   }
 
   render() {
-    const { data: { loading, link } } = this.props
+    const {
+      data: { loading, link }
+    } = this.props
     return loading ? (
       <Loader />
     ) : (
@@ -47,7 +49,11 @@ const LINK_BY_ID_QUERY = gql`
 `
 
 const config = {
-  options: ({ match: { params: { linkId: id } } }) => ({
+  options: ({
+    match: {
+      params: { linkId: id }
+    }
+  }) => ({
     variables: { id }
   })
 }

@@ -26,9 +26,9 @@ class LinkItem extends Component {
   ) : null
 
   render() {
-    console.log('renderLink')
     const {
       loading = false,
+      userId,
       title,
       way,
       author = {},
@@ -66,7 +66,9 @@ class LinkItem extends Component {
             <CardText>
               <small className="text-muted">Last updated 3 mins ago</small>
             </CardText>
-            {this.bottomNavigation}
+            {userId === author.id && (
+              <Link to={`/links/${this.props.id}`}>Edit</Link>
+            )}
           </CardBody>
           {imageUrl && (
             <CardImg

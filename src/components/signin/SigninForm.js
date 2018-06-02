@@ -9,8 +9,8 @@ import { signinSuccess } from '../../redux/modules/auth'
 
 class SigninForm extends Component {
   handleSubmit = async event => {
-    const { client, signinSuccess, authenticate, history } = this.props
     event.preventDefault()
+    const { client, signinSuccess, authenticate, history } = this.props
     const inputs = event.target.elements
     const login = inputs.login.value
     const password = inputs.password.value
@@ -20,7 +20,8 @@ class SigninForm extends Component {
       const userId = data.authenticate.query.currentPerson.userId
       if (token && userId) {
         signinSuccess(token, userId)
-        client.resetStore().then(() => history.replace('/'))
+        await client.resetStore()
+        history.replace('/')
       } else {
         console.log('undef user')
       }

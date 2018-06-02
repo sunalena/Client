@@ -8,7 +8,7 @@ export default (uri, store) => {
     link: createApolloLink(uri, store),
     cache: new InMemoryCache(),
     queryDeduplication: true,
-    connectToDevTools: false,
+    connectToDevTools: true,
     addTypename: true
   })
 }

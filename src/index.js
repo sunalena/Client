@@ -12,7 +12,7 @@ import configureStore from './redux/configureStore'
 import registerServiceWorker from './registerServiceWorker'
 import 'bootstrap/dist/css/bootstrap.css'
 
-import App from './App.1'
+import App from './App'
 
 const store = configureStore()
 const client = createApolloClient('/graphql', store)

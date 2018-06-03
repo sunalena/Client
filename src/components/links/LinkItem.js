@@ -34,7 +34,7 @@ class LinkItem extends Component {
     if (loading) return <Loader />
     return (
       <Card my={2}>
-        {imageUrl && <BackgroundImage src={imageUrl} />}
+        {imageUrl && <BackgroundImage is="img" src={imageUrl} alt="" />}
         <Box p={2}>
           <Subhead>{title}</Subhead>
           {author.fullName && (

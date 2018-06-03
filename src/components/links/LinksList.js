@@ -13,8 +13,8 @@ class LinksList extends Component {
   // shouldComponentUpdate({ loading }, nextState) {
   //   return loading !== this.props.loading
   // }
-  renderLink = ({ id, content, ...rest }) => (
-    <LinkItem key={id} {...rest} {...content} userId={this.props.userId} />
+  renderLink = props => (
+    <LinkItem key={props.id} {...props} userId={this.props.userId} />
   )
 
   render() {

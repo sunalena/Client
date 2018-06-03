@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 
 import { Link } from 'react-router-dom'
 
@@ -6,24 +6,19 @@ import gql from 'graphql-tag.macro'
 
 import Loader from '../common/Loader'
 import {
+  Box,
   Card,
-  CardImg,
-  CardText,
-  CardBody,
-  CardTitle,
-  CardSubtitle
-} from 'reactstrap'
+  BackgroundImage,
+  Subhead,
+  Small,
+  Text,
+  NavLink
+} from 'rebass'
 
 class LinkItem extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.nodeId !== nextProps.nodeId
   }
-
-  bottomNavigation = this.props.userId &&
-  this.props.author &&
-  this.props.userId === this.props.author.id ? (
-    <Link to={`/links/${this.props.id}`}>Edit</Link>
-  ) : null
 
   render() {
     const {
@@ -33,56 +28,31 @@ class LinkItem extends Component {
       way,
       author = {},
       preview,
-      imageUrl
+      imageUrl,
+      id
     } = this.props
-    if (loading)
-      return (
-        <div className="col-lg-12">
-          <h2>
-            <Loader />
-          </h2>
-          <div className={'row mb-2'} />
-        </div>
-      )
+    if (loading) return <Loader />
     return (
-      <Fragment>
-        <Card>
-          <CardBody>
-            <CardTitle>{title}</CardTitle>
-            <CardSubtitle>
-              {author.fullName && (
-                <div>
-                  posted by
-                  <Link to={`/persons/${author.id}`}>{` ${
-                    author.fullName
-                  }`}</Link>
-                </div>
-              )}
-            </CardSubtitle>
-            <CardText>
-              {preview}
-              <a href={way}> Read more</a>
-            </CardText>
-            <CardText>
-              <small className="text-muted">Last updated 3 mins ago</small>
-            </CardText>
-            {userId === author.id && (
-              <Link to={`/links/${this.props.id}`}>Edit</Link>
-            )}
-          </CardBody>
-          {imageUrl && (
-            <CardImg
-              // onLoad={measure}
-              bottom
-              width="100%"
-              // height={imageUrl ? null : 0}
-              src={imageUrl}
-              alt="Card image cap"
-            />
+      <Card my={2}>
+        {imageUrl && <BackgroundImage src={imageUrl} />}
+        <Box p={2}>
+          <Subhead>{title}</Subhead>
+          {author.fullName && (
+            <Text>
+              The link was added by
+              <Link to={`/persons/${author.id}`}>{` ${author.fullName}`}</Link>
+            </Text>
           )}
-        </Card>
-        <div className={'row mb-2'} />
-      </Fragment>
+          <Text>
+            {preview}
+            <NavLink href={way}> Read more</NavLink>
+          </Text>
+          <Small className="text-muted">
+            Last updated 3 mins ago
+            {userId === author.id && <Link to={`/links/${id}`}> Edit</Link>}
+          </Small>
+        </Box>
+      </Card>
     )
   }
 }

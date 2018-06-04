@@ -6,7 +6,7 @@ import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap'
-import { signinSuccess } from '../../redux/modules/auth'
+import { signinSuccess } from 'redux/modules/auth'
 
 class SignupForm extends React.PureComponent {
   handleSubmit = ({
@@ -123,6 +123,9 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withRouter,
   withApollo,
-  connect(null, mapDispatchToProps),
+  connect(
+    null,
+    mapDispatchToProps
+  ),
   graphql(REG_MUTATION, configObject)
 )(SignupForm)

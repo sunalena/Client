@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom'
 
 import gql from 'graphql-tag.macro'
 
-import Loader from '../common/Loader'
+import Loader from 'ui/Loader'
+
 import {
+  Flex,
   Box,
   Card,
   BackgroundImage,
@@ -29,9 +31,11 @@ class LinkItem extends Component {
       author = {},
       preview,
       imageUrl,
-      id
+      id,
+      createdAt
     } = this.props
     if (loading) return <Loader />
+    const postDate = new Date(createdAt)
     return (
       <Card my={2}>
         {imageUrl && <BackgroundImage is="img" src={imageUrl} alt="" />}
@@ -48,8 +52,13 @@ class LinkItem extends Component {
             <NavLink href={way}> Read more</NavLink>
           </Text>
           <Small className="text-muted">
-            Last updated 3 mins ago
-            {userId === author.id && <Link to={`/links/${id}`}> Edit</Link>}
+            <Flex flexDirection="row">
+              <Link to={`/links/${id}`}>
+                {!!createdAt ? postDate.toLocaleString() : 'view'}
+              </Link>
+              <Box m="auto" />
+              {userId === author.id && <Link to={`/links/${id}`}>Edit</Link>}
+            </Flex>
           </Small>
         </Box>
       </Card>

@@ -1,10 +1,7 @@
 import React, { Fragment } from 'react'
-import { Nav, NavItem, UncontrolledTooltip } from 'reactstrap'
 import { Link, withRouter } from 'react-router-dom'
 
-import { Button, Caps, Flex, NavLink, Fixed as Fx } from 'rebass'
-
-import { IconSignIn, IconSignOut, IconUser } from '../icons'
+import { Button, NavLink } from 'rebass'
 
 const handleClickSignOut = (signout, history) => async event => {
   event.preventDefault()

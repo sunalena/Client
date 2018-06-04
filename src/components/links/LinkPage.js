@@ -1,31 +1,35 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
+import { Subhead, Text, NavLink, BackgroundImage } from 'rebass'
 
-import Loader from '../common/Loader'
+import Loader from 'ui/Loader'
 
 class LinkPage extends Component {
-  shouldComponentUpdate(nextProps, nextStae) {
-    return false
-  }
-
   render() {
     const {
-      data: { loading, link }
+      data: { loading, link = {} }
     } = this.props
+    const { title, author = {}, preview, way, imageUrl } = link
+    console.log('LinkPage', this.props)
     return loading ? (
       <Loader />
     ) : (
-      <div>
-        <h2>
-          {link.title} by{' '}
-          <Link to={`/people/${link.author.id}`}>
-            {link.author.firstName} {link.author.lastName}
-          </Link>
-        </h2>
-        {link.preview}
-      </div>
+      <Fragment>
+        {imageUrl && <BackgroundImage is="img" src={imageUrl} alt="" />}
+        <Subhead>{title}</Subhead>
+        {author.fullName && (
+          <Text>
+            The link was added by
+            <Link to={`/persons/${author.id}`}>{` ${author.fullName}`}</Link>
+          </Text>
+        )}
+        <Text>
+          {preview}
+          <NavLink href={way}> Read more</NavLink>
+        </Text>
+      </Fragment>
     )
   }
 }
@@ -39,10 +43,12 @@ const LINK_BY_ID_QUERY = gql`
       way
       preview
       createdAt
+      imageUrl
       author: personByPersonId {
         id
         firstName
         lastName
+        fullName
       }
     }
   }

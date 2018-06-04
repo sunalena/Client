@@ -2,7 +2,7 @@ import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
 
-import { signoutSuccess } from '../redux/modules/auth'
+import { signoutSuccess } from 'redux/modules/auth'
 
 export default (uri, store) => {
   const authLink = new ApolloLink((operation, forward) => {

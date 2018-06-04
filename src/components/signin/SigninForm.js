@@ -5,7 +5,7 @@ import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap'
-import { signinSuccess } from '../../redux/modules/auth'
+import { signinSuccess } from 'redux/modules/auth'
 
 class SigninForm extends Component {
   handleSubmit = async event => {
@@ -77,6 +77,9 @@ const configObject = {
 export default compose(
   withRouter,
   withApollo,
-  connect(null, { signinSuccess }),
+  connect(
+    null,
+    { signinSuccess }
+  ),
   graphql(AUTH_MUTATION, configObject)
 )(SigninForm)

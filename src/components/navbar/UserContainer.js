@@ -2,7 +2,8 @@ import React from 'react'
 import User from './User'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { signoutSuccess } from '../../redux/modules/auth'
+
+import { signoutSuccess } from 'redux/modules/auth'
 
 class UserContainer extends React.PureComponent {
   render = () => <User {...this.props} />
@@ -17,4 +18,7 @@ const mapDispatchToProps = dispatch => ({
   signout: bindActionCreators(signoutSuccess, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserContainer)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserContainer)

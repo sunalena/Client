@@ -11,7 +11,7 @@ import {
   PopoverBody
 } from 'reactstrap'
 
-import Loader from '../common/Loader'
+import Loader from 'ui/Loader'
 
 const wordToList = word => <div key={word.nodeId}>{word.word}</div>
 

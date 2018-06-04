@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import Loader from '../common/Loader'
+import Loader from 'ui/Loader'
 import LinkItem from './LinkItem'
 
 class LinksList extends Component {
@@ -90,6 +90,7 @@ const mapState = ({ navBar, auth }) => ({
   userId: auth.userId
 })
 
-export default compose(connect(mapState), graphql(ALL_POSTS, configObject))(
-  LinksList
-)
+export default compose(
+  connect(mapState),
+  graphql(ALL_POSTS, configObject)
+)(LinksList)

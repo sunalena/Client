@@ -2,7 +2,19 @@ import React from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
+import {
+  Flex,
+  Box,
+  Container,
+  Button,
+  Label,
+  Input,
+  BackgroundImage,
+  Subhead,
+  Small,
+  Text,
+  NavLink
+} from 'rebass'
 
 class LinkForm extends React.Component {
   state = {
@@ -72,49 +84,41 @@ class LinkForm extends React.Component {
   render() {
     const { loading, allTags } = this.props
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <FormGroup>
-          <Label for="linkForm">Link</Label>
-          <Input
-            type="link"
-            name="link"
-            id="link"
-            placeholder="insert link"
-            onChange={this.handleChangeLink}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="linkForm">Title</Label>
-          <Input
-            type="text"
-            name="title"
-            id="title"
-            placeholder="Input Title"
-            onChange={this.handleChangeLink}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="linkForm">Preview</Label>
-          <Input
-            type="textarea"
-            name="preview"
-            id="preview"
-            onChange={this.handleChangeLink}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="linkForm">Image Link</Label>
-          <Input
-            type="link"
-            name="image"
-            id="image"
-            placeholder="insert image link"
-            onChange={this.handleChangeLink}
-          />
-        </FormGroup>
-        <FormGroup>{!loading && allTags.nodes.map(this.tagToButton)}</FormGroup>
+      <Container is="form" onSubmit={this.handleSubmit}>
+        <Label for="linkForm">Link</Label>
+        <Input
+          type="link"
+          name="link"
+          id="link"
+          placeholder="insert link"
+          onChange={this.handleChangeLink}
+        />
+        <Label for="linkForm">Title</Label>
+        <Input
+          type="text"
+          name="title"
+          id="title"
+          placeholder="Input Title"
+          onChange={this.handleChangeLink}
+        />
+        <Label for="linkForm">Preview</Label>
+        <Input
+          type="textarea"
+          name="preview"
+          id="preview"
+          onChange={this.handleChangeLink}
+        />
+        <Label for="linkForm">Image Link</Label>
+        <Input
+          type="link"
+          name="image"
+          id="image"
+          placeholder="insert image link"
+          onChange={this.handleChangeLink}
+        />
+        {!loading && allTags.nodes.map(this.tagToButton)}
         <Button>Submit</Button>
-      </Form>
+      </Container>
     )
   }
 }

@@ -24,7 +24,7 @@ const LinksPage = ({ match, ...rest }) => (
   <Box>
     <Flex my={2}>
       <Heading>Links</Heading>
-      <Box m={'auto'} />
+      <Box m="auto" />
       <Route exact path={match.url} render={CreateLinkButton} />
       <Route exact path={`${match.url}/:linkId`} render={BackLink(match.url)} />
     </Flex>

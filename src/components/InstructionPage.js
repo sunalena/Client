@@ -1,7 +1,7 @@
 import React from 'react'
 
-const InstructionPage = () => (
-  <h4 className="text-warning mx-auto">Тут пока ничего нет</h4>
-)
+import { Page } from 'ui'
+
+export const InstructionPage = () => <Page title="Тут пока ничего нет" />
 
 export default InstructionPage

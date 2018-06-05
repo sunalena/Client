@@ -5,7 +5,8 @@ import { connect } from 'react-redux'
 import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap'
+import { Card, Button } from 'rebass'
+import { Input } from 'ui'
 import { signinSuccess } from 'redux/modules/auth'
 
 class SignupForm extends React.PureComponent {
@@ -47,31 +48,44 @@ class SignupForm extends React.PureComponent {
     }
   }
   render = () => (
-    <Form onSubmit={this.handleSubmit(this.props)}>
-      <FormGroup>
-        <Label className="control-label">First name</Label>
-        <Input name="firstName" type="text" className="form-control" />
-      </FormGroup>
-      <FormGroup>
-        <Label className="control-label">Last name</Label>
-        <Input name="lastName" type="text" className="form-control" />
-      </FormGroup>
-      <FormGroup>
-        <Label className="control-label">E-mail</Label>
-        <Input name="email" type="email" className="form-control" />
-      </FormGroup>
-      <FormGroup>
-        <Label className="control-label">login</Label>
-        <Input name="login" type="text" className="form-control" />
-      </FormGroup>
-      <FormGroup>
-        <Label className="control-label">password</Label>
-        <Input name="password" type="password" className="form-control" />
-      </FormGroup>
-      <FormGroup>
-        <Button>Signup</Button>
-      </FormGroup>
-    </Form>
+    <Card is="form" onSubmit={this.handleSubmit(this.props)}>
+      <Input
+        id="firstName"
+        type="text"
+        name="firstName"
+        label="First name"
+        placeholder="Input first name"
+      />
+      <Input
+        id="lastName"
+        type="text"
+        name="lastName"
+        label="Last name"
+        placeholder="Input last name"
+      />
+      <Input
+        id="email"
+        type="email"
+        name="email"
+        label="E-mail"
+        placeholder="Input e-mail"
+      />
+      <Input
+        id="login"
+        type="text"
+        name="login"
+        label="Login"
+        placeholder="Input login"
+      />
+      <Input
+        id="password"
+        type="password"
+        name="password"
+        label="Password"
+        placeholder="Input password"
+      />
+      <Button>Signup</Button>
+    </Card>
   )
 }
 

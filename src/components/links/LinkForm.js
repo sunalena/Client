@@ -2,19 +2,8 @@ import React from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import {
-  Flex,
-  Box,
-  Container,
-  Button,
-  Label,
-  Input,
-  BackgroundImage,
-  Subhead,
-  Small,
-  Text,
-  NavLink
-} from 'rebass'
+import { Box, Card, Button } from 'rebass'
+import { Input, CheckBadge } from 'ui'
 
 class LinkForm extends React.Component {
   state = {
@@ -28,17 +17,6 @@ class LinkForm extends React.Component {
   handleChangeLink = event => {
     const { name, value } = event.target
     this.setState({ [name]: value })
-  }
-
-  onCheckboxBtnClick1 = selected => {
-    console.log(selected)
-    const index = this.state.cSelected.indexOf(selected)
-    if (index < 0) {
-      this.state.cSelected.push(selected)
-    } else {
-      this.state.cSelected.splice(index, 1)
-    }
-    this.setState({ cSelected: [...this.state.cSelected] })
   }
 
   onCheckboxBtnClick = event => {
@@ -67,58 +45,58 @@ class LinkForm extends React.Component {
     }
   }
 
-  tagToButton = tag =>
-    console.log(this.state.cSelected) || (
-      <Button
-        key={tag.id}
-        style={{ margin: 5 }}
-        id={tag.id}
-        color={this.state.cSelected.includes(tag.id) ? 'primary' : 'default'}
-        onClick={this.onCheckboxBtnClick}
-        active={this.state.cSelected.includes(tag.id)}
-      >
-        {tag.name}
-      </Button>
-    )
+  tagToButton = tag => (
+    <CheckBadge
+      key={tag.id}
+      my={1}
+      id={tag.id}
+      onClick={this.onCheckboxBtnClick}
+      checked={this.state.cSelected.includes(tag.id)}
+    >
+      {tag.name}
+    </CheckBadge>
+  )
 
   render() {
     const { loading, allTags } = this.props
     return (
-      <Container is="form" onSubmit={this.handleSubmit}>
-        <Label for="linkForm">Link</Label>
+      <Card is="form" onSubmit={this.handleSubmit}>
         <Input
-          type="link"
-          name="link"
           id="link"
-          placeholder="insert link"
+          type="text"
+          name="link"
+          label="Link"
+          placeholder="Insert link"
           onChange={this.handleChangeLink}
         />
-        <Label for="linkForm">Title</Label>
         <Input
+          id="title"
           type="text"
           name="title"
-          id="title"
+          label="Title"
           placeholder="Input Title"
           onChange={this.handleChangeLink}
         />
-        <Label for="linkForm">Preview</Label>
         <Input
+          id="preview"
           type="textarea"
           name="preview"
-          id="preview"
+          textarea={true}
+          value=""
+          label="Preview"
           onChange={this.handleChangeLink}
         />
-        <Label for="linkForm">Image Link</Label>
         <Input
+          id="image"
           type="link"
           name="image"
-          id="image"
-          placeholder="insert image link"
+          label="Image Link"
+          placeholder="Insert image link"
           onChange={this.handleChangeLink}
         />
-        {!loading && allTags.nodes.map(this.tagToButton)}
+        <Box>{!loading && allTags.nodes.map(this.tagToButton)}</Box>
         <Button>Submit</Button>
-      </Container>
+      </Card>
     )
   }
 }

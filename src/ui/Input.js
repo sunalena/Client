@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { Group, Label, Input } from 'rebass'
+import { Group, Label, Input as In, Textarea } from 'rebass'
 
-const Input = ({ label, ...props }) => (
-  <Group>
+export const Input = ({ label, textarea, ...props }) => (
+  <Group flexDirection="column">
     <Label>{label}</Label>
-    <Input {...props} />
+    {!textarea ? <In {...props} /> : <Textarea {...props}> </Textarea>}
   </Group>
 )
 

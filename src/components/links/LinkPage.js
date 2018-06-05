@@ -4,7 +4,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import { Subhead, Text, NavLink, BackgroundImage } from 'rebass'
 
-import Loader from 'ui/Loader'
+import { Loader } from 'ui'
 
 class LinkPage extends Component {
   render() {

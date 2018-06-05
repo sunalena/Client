@@ -1,34 +1,35 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import { Route, Switch } from 'react-router-dom'
 
-import { Link, Route, Switch } from 'react-router-dom'
-
-import { Row, Col } from 'reactstrap'
+import { PageWithLink, RightLink } from 'ui'
 
 import TagsList from './TagsList'
 import TagPage from './TagPage'
 import TagForm from './TagForm'
 
-const CreateTagLink = () => (
-  <Link to="/tags/create" className="btn btn-primary pull-right">
-    Create Tag
-  </Link>
+const rightLink = url => (
+  <Fragment>
+    <Route
+      exact
+      path={url}
+      render={() => <RightLink to={'/tags/create'} name="Create Tag" />}
+    />
+    <Route
+      exact
+      path={`${url}/:tagId`}
+      render={() => <RightLink to={url} name="Back" />}
+    />
+  </Fragment>
 )
 
-const TagsPage = ({ match, ...rest }) => (
-  <Row>
-    <Col xs="12">
-      <h1>
-        Tags
-        <Route exact path={match.url} render={CreateTagLink} />
-      </h1>
-      <hr />
-      <Switch>
-        <Route exact path={`${match.url}/create`} component={TagForm} />
-        <Route exact path={`${match.url}/:tagId`} component={TagPage} />
-      </Switch>
-      <Route exact path={match.url} component={TagsList} />
-    </Col>
-  </Row>
+export const TagsPage = ({ match = {} }) => (
+  <PageWithLink title="Tags" rightLink={rightLink(match.url)}>
+    <Switch>
+      <Route exact path={`${match.url}/create`} component={TagForm} />
+      <Route exact path={`${match.url}/:tagId`} component={TagPage} />
+    </Switch>
+    <Route exact path={match.url} component={TagsList} />
+  </PageWithLink>
 )
 
 export default TagsPage

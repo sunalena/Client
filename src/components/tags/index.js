@@ -1,1 +1,1 @@
-export { default } from './TagsPage'
+export { TagsPage } from './TagsPage'

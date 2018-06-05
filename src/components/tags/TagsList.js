@@ -1,18 +1,16 @@
 import React from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
-import { Link } from 'react-router-dom'
-
-import { ListGroup } from 'reactstrap'
+import { Flex } from 'rebass'
+import { RightLink } from 'ui'
 
 const tagToList = ({ id, name }) => (
-  <Link key={id} to={'/tags/' + id}>
-    {name}
-  </Link>
+  <RightLink key={id} to={'/tags/' + id} name={name} />
 )
 
 const TagsList = ({ loading, error, fetchMore, allTags }) =>
-  !loading && <ListGroup>{allTags.nodes.map(tagToList)}</ListGroup>
+  !loading &&
+  !error && <Flex flexDirection="column">{allTags.nodes.map(tagToList)}</Flex>
 
 const ALL_TAGS = gql`
   {

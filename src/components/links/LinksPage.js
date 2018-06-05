@@ -1,39 +1,35 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import { Route, Switch } from 'react-router-dom'
 
-import { Link, Route, Switch } from 'react-router-dom'
-
-import { Box, Heading, Flex, NavLink } from 'rebass'
+import { PageWithLink, RightLink } from 'ui'
 
 import LinksList from './LinksList'
 import LinkPage from './LinkPage'
 import LinkForm from './LinkForm'
 
-const CreateLinkButton = () => (
-  <NavLink to="/links/create" is={Link}>
-    Create Link
-  </NavLink>
+const rightLink = url => (
+  <Fragment>
+    <Route
+      exact
+      path={url}
+      render={() => <RightLink url={'/links/create'} name="Create Link" />}
+    />
+    <Route
+      exact
+      path={`${url}/:linkId`}
+      render={() => <RightLink url={url} name="Back" />}
+    />
+  </Fragment>
 )
 
-const BackLink = url => () => (
-  <NavLink is={Link} to={url}>
-    Back
-  </NavLink>
-)
-
-const LinksPage = ({ match, ...rest }) => (
-  <Box>
-    <Flex my={2}>
-      <Heading>Links</Heading>
-      <Box m="auto" />
-      <Route exact path={match.url} render={CreateLinkButton} />
-      <Route exact path={`${match.url}/:linkId`} render={BackLink(match.url)} />
-    </Flex>
+export const LinksPage = ({ match = {} }) => (
+  <PageWithLink title="Links" rightLink={rightLink(match.url)}>
     <Switch>
       <Route exact path={`${match.url}/create`} component={LinkForm} />
       <Route exact path={`${match.url}/:linkId`} component={LinkPage} />
     </Switch>
     <Route exact path={match.url} component={LinksList} />
-  </Box>
+  </PageWithLink>
 )
 
 export default LinksPage

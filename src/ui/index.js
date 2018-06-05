@@ -1,0 +1,6 @@
+export { Input } from './Input'
+export { CheckBadge } from './CheckBadge'
+export { Loader } from './loader'
+export { Page } from './Page'
+export { RightLink } from './RightLink'
+export { PageWithLink } from './PageWithLink'

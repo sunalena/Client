@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import gql from 'graphql-tag.macro'
 
-import Loader from 'ui/Loader'
+import { Loader } from 'ui'
 
 import {
   Flex,

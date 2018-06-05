@@ -1,9 +1,7 @@
 import React from 'react'
 
-const GreetingPage = () => (
-  <div>
-    <h1 className="text-info">HELLO!</h1>
-  </div>
-)
+import { Page } from 'ui'
+
+export const GreetingPage = () => <Page title="HELLO!" />
 
 export default GreetingPage

@@ -1,50 +1,48 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Popover,
-  PopoverHeader,
-  PopoverBody
-} from 'reactstrap'
+import { Message, Close, Box, Card, Text, Heading } from 'rebass'
 
-import Loader from 'ui/Loader'
+import { Loader, Input } from 'ui'
 
-const wordToList = word => <div key={word.nodeId}>{word.word}</div>
+const wordToList = word => <Text key={word.nodeId}>{word.word}</Text>
 
 class TagPage extends Component {
-  state = { createdWords: [], popoverOpen: false, message: '' }
+  state = { createdWords: [], messageOpen: false, message: '' }
 
-  toggle = message => {
+  openMessage = message => {
     this.setState({
-      popoverOpen: !this.state.popoverOpen,
+      messageOpen: true,
       message
+    })
+  }
+  closeMessage = () => {
+    this.setState({
+      messageOpen: false
     })
   }
 
   handleSubmit = async event => {
     event.preventDefault()
     const wordInput = event.target.elements.word
-    const tagId = this.props.data ? this.props.data.tag.id : undefined
+    const { data = {}, createWord } = this.props
+    const tagId = data && data.tag ? data.tag.id : undefined
     try {
-      const { data } = await this.props.createWord({
+      const { data: reciveData } = await createWord({
         tagId,
         word: wordInput.value
       })
-      if (data.createWordNTag.wordNTag) {
+      if (reciveData.createWordNTag.wordNTag) {
         this.setState({
           createdWords: [
             ...this.state.createdWords,
-            data.createWordNTag.wordNTag
+            reciveData.createWordNTag.wordNTag
           ]
         })
         wordInput.value = ''
       }
     } catch (err) {
-      this.toggle(err.message)
+      this.openMessage(err.message)
     }
   }
 
@@ -52,29 +50,29 @@ class TagPage extends Component {
     const {
       data: { loading, tag }
     } = this.props
-    return loading ? (
-      <Loader />
-    ) : (
-      <div>
-        <h2>{tag.name}</h2>
-        <Form onSubmit={this.handleSubmit}>
-          <FormGroup>
-            <Label for="tagForm">Add words</Label>
-            <Input type="text" name="word" id="word" placeholder="add word" />
-          </FormGroup>
-        </Form>
-        <Popover
-          placement="top"
-          isOpen={this.state.popoverOpen}
-          target="word"
-          toggle={this.toggle}
-        >
-          <PopoverHeader>Error</PopoverHeader>
-          <PopoverBody>{this.state.message}</PopoverBody>
-        </Popover>
+    const { messageOpen, message } = this.state
+    if (loading) return <Loader />
+    return (
+      <Box>
+        <Heading h4="true">{tag.name}</Heading>
+        <Card is="form" onSubmit={this.handleSubmit}>
+          {messageOpen && (
+            <Message>
+              {message} <Box mx="auto" /> <Close onClick={this.closeMessage} />
+            </Message>
+          )}
+          <Input
+            id="word"
+            type="text"
+            name="word"
+            label="Add words"
+            placeholder="Add Word"
+            onChange={this.handleChangeLink}
+          />
+        </Card>
         {tag.words.nodes.map(wordToList)}
         {this.state.createdWords.map(wordToList)}
-      </div>
+      </Box>
     )
   }
 }

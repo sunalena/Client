@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import { signinSuccess } from 'redux/modules/auth'
+import { Card, Button } from 'rebass'
+import { Input } from 'ui'
 
 class SigninForm extends Component {
   handleSubmit = async event => {
@@ -31,24 +32,23 @@ class SigninForm extends Component {
   }
 
   render = () => (
-    <Form onSubmit={this.handleSubmit}>
-      <FormGroup>
-        <Label for="login">Login</Label>
-        <Input name="login" id="login" placeholder="login" />
-      </FormGroup>
-      <FormGroup>
-        <Label for="password">Password</Label>
-        <Input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="password"
-        />
-      </FormGroup>
-      <FormGroup>
-        <Button>Signin</Button>
-      </FormGroup>
-    </Form>
+    <Card is="form" onSubmit={this.handleSubmit}>
+      <Input
+        id="login"
+        type="text"
+        name="login"
+        label="Login"
+        placeholder="login"
+      />
+      <Input
+        id="password"
+        type="password"
+        name="password"
+        label="Password"
+        placeholder="Password"
+      />
+      <Button>Signin</Button>
+    </Card>
   )
 }
 

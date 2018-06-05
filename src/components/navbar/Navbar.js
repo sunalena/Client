@@ -1,16 +1,24 @@
 import React, { Fragment } from 'react'
-
+import sc from 'styled-components'
 import { Link } from 'react-router-dom'
-import { Toolbar as Tb, Box, Caps, Flex, NavLink, Fixed as Fx } from 'rebass'
+import {
+  Toolbar as Tb,
+  Box,
+  Caps,
+  Flex,
+  NavLink,
+  Fixed as Fx,
+  Container
+} from 'rebass'
 
 import User from './UserContainer'
 
-const Fixed = Fx.extend`
+const Fixed = sc(Fx)`
   z-index: 1;
 `
 
-const Toolbar = Tb.extend`
-  background-color: #444;
+const Toolbar = sc(Tb)`
+  background: dark;
 `
 
 const Links = () => (
@@ -27,15 +35,15 @@ const Links = () => (
   </Fragment>
 )
 
-const Navbar = ({ brand }) => (
+export const Navbar = ({ brand }) => (
   <Fixed top={0} left={0} right={0}>
     <Toolbar>
-      <Flex
+      <Container
+        is={Flex}
+        w={1}
         flexDirection={['column', 'row']}
         alignItems={['flex-start', 'center']}
-        w={1}
       >
-        <Box mx="auto" />
         <NavLink is={Link} mx={[0, 2]} to={'/'}>
           <Caps fontWeight="bold">{brand}</Caps>
         </NavLink>
@@ -44,8 +52,7 @@ const Navbar = ({ brand }) => (
         <Links />
         <Box mx="auto" />
         <User />
-        <Box mx="auto" />
-      </Flex>
+      </Container>
     </Toolbar>
   </Fixed>
 )

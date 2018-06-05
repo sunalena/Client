@@ -1,13 +1,15 @@
 import React, { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
-import { Form, FormGroup, Label, Input, ListGroup } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
+import { Card, NavLink } from 'rebass'
+import { Input } from 'ui'
+
 const tagToList = ({ id, name }) => (
-  <Link key={id} to={'/tags/' + id}>
+  <NavLink key={id} as={Link} to={'/tags/' + id}>
     {name}
-  </Link>
+  </NavLink>
 )
 
 class TagForm extends React.Component {
@@ -26,16 +28,18 @@ class TagForm extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <Fragment>
-        <Form onSubmit={this.handleSubmit}>
-          <FormGroup>
-            <Label for="tagForm">Create New Tag</Label>
-            <Input type="text" name="name" id="name" placeholder="add tag" />
-          </FormGroup>
-        </Form>
-        {<ListGroup>{this.state.createdTags.map(tagToList)}</ListGroup>}
+        <Card is="form" onSubmit={this.handleSubmit}>
+          <Input
+            id="title"
+            type="text"
+            name="name"
+            label="Create New Tag"
+            placeholder="Add Tag"
+          />
+        </Card>
+        {this.state.createdTags.map(tagToList)}
       </Fragment>
     )
   }

@@ -6,7 +6,8 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import Loader from 'ui/Loader'
+import { Loader } from 'ui'
+
 import LinkItem from './LinkItem'
 
 class LinksList extends Component {

@@ -1,10 +1,12 @@
 import React from 'react'
+import { Heading } from 'rebass'
 
-const ErrorPage = () => (
-  <div>
-    <h1 className="text-danger">500</h1>
-    <h3 className="text-info">Shit happens!</h3>
-  </div>
+import { Page } from 'ui'
+
+export const ErrorPage = () => (
+  <Page title="500">
+    <Heading h4="true">Shit happens!</Heading>
+  </Page>
 )
 
 export default ErrorPage

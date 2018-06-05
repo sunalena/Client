@@ -1,10 +1,12 @@
 import React from 'react'
+import { Heading } from 'rebass'
 
-const NotFound = () => (
-  <div>
-    <h1 className="text-danger">404</h1>
-    <h3 className="text-info">Not found!</h3>
-  </div>
+import { Page } from 'ui'
+
+export const NotFoundPage = () => (
+  <Page title="404">
+    <Heading h4="true">Not found!</Heading>
+  </Page>
 )
 
-export default NotFound
+export default NotFoundPage

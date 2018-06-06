@@ -9,7 +9,6 @@ import createApolloClient from './apollo/apolloClient'
 import configureStore from './redux/configureStore'
 
 import registerServiceWorker from './registerServiceWorker'
-import 'bootstrap/dist/css/bootstrap.css'
 
 import App from './App'
 import { theme } from 'styles'

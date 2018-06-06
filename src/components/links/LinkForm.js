@@ -2,8 +2,7 @@ import React from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Box, Card, Button } from 'rebass'
-import { Input, CheckBadge } from 'ui'
+import { Box, Card, Button, Input, CheckBadge } from 'ui'
 
 class LinkForm extends React.Component {
   state = {

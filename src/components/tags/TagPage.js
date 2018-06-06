@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
-import { Message, Close, Box, Card, Text, Heading } from 'rebass'
 
-import { Loader, Input } from 'ui'
+import { Loader, Input, Message, Close, Box, Card, Text, Heading } from 'ui'
 
 const wordToList = word => <Text key={word.nodeId}>{word.word}</Text>
 

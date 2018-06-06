@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import sc from 'styled-components'
 import { Flex } from 'rebass'
 

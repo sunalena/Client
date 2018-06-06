@@ -1,7 +1,6 @@
 import React from 'react'
-import { Heading } from 'rebass'
 
-import { Page } from 'ui'
+import { Page, Heading } from 'ui'
 
 export const NotFoundPage = () => (
   <Page title="404">

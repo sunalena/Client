@@ -5,8 +5,7 @@ import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
 import { signinSuccess } from 'redux/modules/auth'
-import { Card, Button } from 'rebass'
-import { Input } from 'ui'
+import { Input, Card, Button } from 'ui'
 
 class SigninForm extends Component {
   handleSubmit = async event => {

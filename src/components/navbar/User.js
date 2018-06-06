@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 
-import { Button, NavLink } from 'rebass'
+import { Button, NavLink } from 'ui'
 
 const handleClickSignOut = (signout, history) => async event => {
   event.preventDefault()

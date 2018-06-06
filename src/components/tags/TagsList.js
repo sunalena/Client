@@ -1,8 +1,8 @@
 import React from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
-import { Flex } from 'rebass'
-import { RightLink } from 'ui'
+
+import { Flex, RightLink } from 'ui'
 
 const tagToList = ({ id, name }) => (
   <RightLink key={id} to={'/tags/' + id} name={name} />

@@ -12,12 +12,12 @@ const rightLink = url => (
     <Route
       exact
       path={url}
-      render={() => <RightLink url={'/links/create'} name="Create Link" />}
+      render={() => <RightLink to={'/links/create'} name="Create Link" />}
     />
     <Route
       exact
       path={`${url}/:linkId`}
-      render={() => <RightLink url={url} name="Back" />}
+      render={() => <RightLink to={url} name="Back" />}
     />
   </Fragment>
 )

@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom'
 
 import gql from 'graphql-tag.macro'
 
-import { Loader } from 'ui'
-
 import {
+  Loader,
   Flex,
   Box,
   Card,
@@ -15,7 +14,7 @@ import {
   Small,
   Text,
   NavLink
-} from 'rebass'
+} from 'ui'
 
 class LinkItem extends Component {
   shouldComponentUpdate(nextProps, nextState) {

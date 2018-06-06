@@ -3,8 +3,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import { Link } from 'react-router-dom'
 
-import { Card, NavLink } from 'rebass'
-import { Input } from 'ui'
+import { Input, Card, NavLink } from 'ui'
 
 const tagToList = ({ id, name }) => (
   <NavLink key={id} as={Link} to={'/tags/' + id}>

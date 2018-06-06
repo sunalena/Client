@@ -1,25 +1,8 @@
 import React, { Fragment } from 'react'
-import sc from 'styled-components'
 import { Link } from 'react-router-dom'
-import {
-  Toolbar as Tb,
-  Box,
-  Caps,
-  Flex,
-  NavLink,
-  Fixed as Fx,
-  Container
-} from 'rebass'
+import { Toolbar, Box, Caps, Flex, NavLink, Fixed, Container } from 'ui'
 
 import User from './UserContainer'
-
-const Fixed = sc(Fx)`
-  z-index: 1;
-`
-
-const Toolbar = sc(Tb)`
-  background: dark;
-`
 
 const Links = () => (
   <Fragment>

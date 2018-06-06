@@ -5,8 +5,7 @@ import { connect } from 'react-redux'
 import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Card, Button } from 'rebass'
-import { Input } from 'ui'
+import { Input, Card, Button } from 'ui'
 import { signinSuccess } from 'redux/modules/auth'
 
 class SignupForm extends React.PureComponent {

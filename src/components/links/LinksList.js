@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { Loader } from 'ui'
+import { Loader, InputWithLabel, Box } from 'ui'
 
 import LinkItem from './LinkItem'
 
@@ -17,6 +17,13 @@ class LinksList extends Component {
   renderLink = props => (
     <LinkItem key={props.id} {...props} userId={this.props.userId} />
   )
+  handleSearch = event => {
+    event.preventDefault()
+    const inputs = event.target.elements
+    const searchValue = inputs.search.value
+    this.props.refetch({ searchValue })
+    console.log('LinksList', searchValue)
+  }
 
   render() {
     const { loading, error, mainQuery, loadMore } = this.props
@@ -25,14 +32,25 @@ class LinksList extends Component {
 
     const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
     return (
-      <InfiniteScroll
-        loadMore={loadMore}
-        hasMore={hasNextPage}
-        initialLoad={false}
-        loader={<p key={'00'}>Loading...</p>}
-      >
-        {nodes.map(this.renderLink)}
-      </InfiniteScroll>
+      <Fragment>
+        <Box is="form" onSubmit={this.handleSearch}>
+          <InputWithLabel
+            id="search"
+            type="text"
+            name="search"
+            label="Search"
+            placeholder="Search link"
+          />
+        </Box>
+        <InfiniteScroll
+          loadMore={loadMore}
+          hasMore={hasNextPage}
+          initialLoad={false}
+          loader={<p key={'00'}>Loading...</p>}
+        >
+          {nodes.map(this.renderLink)}
+        </InfiniteScroll>
+      </Fragment>
     )
   }
 }
@@ -52,11 +70,14 @@ const ALL_POSTS = gql`
   ${LinkItem.fragments.link}
 `
 
-const props = ({ data: { loading, error, mainQuery, fetchMore } }) => ({
+const props = ({
+  data: { loading, error, mainQuery, fetchMore, refetch }
+}) => ({
   loading,
   error,
   fetchMore,
   mainQuery,
+  refetch,
   loadMore: () =>
     fetchMore({
       variables: { after: mainQuery.pageInfo.endCursor },

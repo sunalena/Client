@@ -2,7 +2,16 @@ import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Loader, Input, Message, Close, Box, Card, Text, Heading } from 'ui'
+import {
+  Loader,
+  InputWithLabel,
+  Message,
+  Close,
+  Box,
+  Card,
+  Text,
+  Heading
+} from 'ui'
 
 const wordToList = word => <Text key={word.nodeId}>{word.word}</Text>
 
@@ -60,7 +69,7 @@ class TagPage extends Component {
               {message} <Box mx="auto" /> <Close onClick={this.closeMessage} />
             </Message>
           )}
-          <Input
+          <InputWithLabel
             id="word"
             type="text"
             name="word"

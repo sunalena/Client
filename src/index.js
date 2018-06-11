@@ -19,15 +19,15 @@ const store = configureStore()
 const client = createApolloClient('http://localhost:4000/graphql', store)
 
 ReactDOM.render(
-  <RebassProvider theme={theme}>
-    <Provider store={store}>
-      <ApolloProvider client={client}>
-        <BrowserRouter>
+  <Provider store={store}>
+    <ApolloProvider client={client}>
+      <BrowserRouter>
+        <RebassProvider theme={theme}>
           <App />
-        </BrowserRouter>
-      </ApolloProvider>
-    </Provider>
-  </RebassProvider>,
+        </RebassProvider>
+      </BrowserRouter>
+    </ApolloProvider>
+  </Provider>,
   document.getElementById('root')
 )
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { NavLink } from 'rebass'
+import { ButtonTransparent } from 'ui'
 
 export const RightLink = ({ to, name }) => (
-  <NavLink is={Link} to={to}>
+  <ButtonTransparent is={Link} to={to}>
     {name}
-  </NavLink>
+  </ButtonTransparent>
 )

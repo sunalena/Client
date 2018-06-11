@@ -9,11 +9,11 @@ import {
   Flex,
   Box,
   Card,
-  BackgroundImage,
+  Image,
   Subhead,
-  Small,
   Text,
-  NavLink
+  NavLink,
+  ButtonTransparent
 } from 'ui'
 
 class LinkItem extends Component {
@@ -36,30 +36,39 @@ class LinkItem extends Component {
     if (loading) return <Loader />
     const postDate = new Date(createdAt)
     return (
-      <Card my={2}>
-        {imageUrl && <BackgroundImage is="img" src={imageUrl} alt="" />}
-        <Box p={2}>
-          <Subhead>{title}</Subhead>
+      <Card
+        is={Flex}
+        my={3}
+        p={0}
+        flexDirection={['column-reverse', null, 'row']}
+      >
+        <Box w={imageUrl ? [1, null, 1 / 2] : 1} py={[2, 3]} px={[3, 4]}>
+          <Subhead py={3}>{title}</Subhead>
           {author.fullName && (
-            <Text>
+            <Text fontSize={1}>
               The link was added by
               <Link to={`/persons/${author.id}`}>{` ${author.fullName}`}</Link>
             </Text>
           )}
-          <Text>
-            {preview}
-            <NavLink href={way}> Read more</NavLink>
-          </Text>
-          <Small className="text-muted">
-            <Flex flexDirection="row">
-              <Link to={`/links/${id}`}>
-                {!!createdAt ? postDate.toLocaleString() : 'view'}
-              </Link>
-              <Box m="auto" />
-              {userId === author.id && <Link to={`/links/${id}`}>Edit</Link>}
-            </Flex>
-          </Small>
+          <Text fontSize={1}>{preview}</Text>
+          <Flex flexDirection="row" alignItems="center" mt={4}>
+            <ButtonTransparent is={NavLink} href={way}>
+              {!!createdAt && postDate.toLocaleString()}
+            </ButtonTransparent>
+            <Box m="auto" />
+            <ButtonTransparent
+              is={Link}
+              to={userId === author.id ? `/links/${id}` : `/links/${id}`}
+            >
+              {userId === author.id ? 'EDIT' : 'VIEW'}
+            </ButtonTransparent>
+          </Flex>
         </Box>
+        {imageUrl && (
+          <Box w={[1, null, 1 / 2]} p={0}>
+            <Image w={1} is="img" src={imageUrl} alt="" />
+          </Box>
+        )}
       </Card>
     )
   }

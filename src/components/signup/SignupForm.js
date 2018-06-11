@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Input, Card, Button } from 'ui'
+import { InputWithLabel, Card, Button } from 'ui'
 import { signinSuccess } from 'redux/modules/auth'
 
 class SignupForm extends React.PureComponent {
@@ -48,35 +48,35 @@ class SignupForm extends React.PureComponent {
   }
   render = () => (
     <Card is="form" onSubmit={this.handleSubmit(this.props)}>
-      <Input
+      <InputWithLabel
         id="firstName"
         type="text"
         name="firstName"
         label="First name"
         placeholder="Input first name"
       />
-      <Input
+      <InputWithLabel
         id="lastName"
         type="text"
         name="lastName"
         label="Last name"
         placeholder="Input last name"
       />
-      <Input
+      <InputWithLabel
         id="email"
         type="email"
         name="email"
         label="E-mail"
         placeholder="Input e-mail"
       />
-      <Input
+      <InputWithLabel
         id="login"
         type="text"
         name="login"
         label="Login"
         placeholder="Input login"
       />
-      <Input
+      <InputWithLabel
         id="password"
         type="password"
         name="password"

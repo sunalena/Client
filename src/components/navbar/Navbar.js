@@ -1,43 +1,73 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, PureComponent } from 'react'
 import { Link } from 'react-router-dom'
-import { Toolbar, Box, Caps, Flex, NavLink, Fixed, Container } from 'ui'
+import {
+  Toolbar,
+  Box,
+  Flex,
+  NavLink,
+  Fixed,
+  Container,
+  Text,
+  Hide,
+  ButtonTransparent,
+  Image
+} from 'ui'
 
-import User from './UserContainer'
+import User from './User'
 
-const Links = () => (
-  <Fragment>
-    <NavLink is={Link} mx={[0, 2]} to={'/links'}>
+const Links = ({ isOpen }) => (
+  <Hide
+    hidden={!isOpen && [true, false]}
+    flexDirection={['column', 'row']}
+    w={1}
+  >
+    <ButtonTransparent is={Link} mx={[0, 2]} to={'/links'}>
       Links
-    </NavLink>
-    <NavLink is={Link} mx={[0, 2]} to={'/tags'}>
+    </ButtonTransparent>
+    <ButtonTransparent is={Link} mx={[0, 2]} to={'/tags'}>
       Tags
-    </NavLink>
-    <NavLink is={Link} mx={[0, 2]} to={'/users'}>
+    </ButtonTransparent>
+    <ButtonTransparent is={Link} mx={[0, 2]} to={'/users'}>
       Users
-    </NavLink>
-  </Fragment>
+    </ButtonTransparent>
+    <Box mx="auto" />
+    <User />
+  </Hide>
 )
-
-export const Navbar = ({ brand }) => (
-  <Fixed top={0} left={0} right={0}>
-    <Toolbar>
-      <Container
-        is={Flex}
-        w={1}
-        flexDirection={['column', 'row']}
-        alignItems={['flex-start', 'center']}
-      >
-        <NavLink is={Link} mx={[0, 2]} to={'/'}>
-          <Caps fontWeight="bold">{brand}</Caps>
-        </NavLink>
-        <Box mx="auto" />
-        <Box mx="auto" />
-        <Links />
-        <Box mx="auto" />
-        <User />
-      </Container>
-    </Toolbar>
-  </Fixed>
-)
-
-export default Navbar
+export class Navbar extends PureComponent {
+  state = { isOpen: false }
+  toggle = () => {
+    this.setState({ isOpen: !this.state.isOpen })
+  }
+  render() {
+    const { brand } = this.props
+    const { isOpen } = this.state
+    return (
+      <Fixed top={0} left={0} right={0}>
+        <Toolbar>
+          <Container
+            is={Flex}
+            w={1}
+            flexDirection={['column', 'row']}
+            alignItems={['stretch', 'center']}
+            my={2}
+            px={0}
+          >
+            <Flex>
+              <ButtonTransparent is={Link} mx={0} to={'/'}>
+                {brand}
+              </ButtonTransparent>
+              <Box mx="auto" />
+              <Hide hidden={[false, true]} alignItems="center">
+                <ButtonTransparent onClick={this.toggle}>
+                  MENU
+                </ButtonTransparent>
+              </Hide>
+            </Flex>
+            <Links isOpen={isOpen} />
+          </Container>
+        </Toolbar>
+      </Fixed>
+    )
+  }
+}

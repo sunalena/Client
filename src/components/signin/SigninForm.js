@@ -5,7 +5,7 @@ import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
 import { signinSuccess } from 'redux/modules/auth'
-import { Input, Card, Button } from 'ui'
+import { InputWithLabel, Card, Button } from 'ui'
 
 class SigninForm extends Component {
   handleSubmit = async event => {
@@ -32,21 +32,21 @@ class SigninForm extends Component {
 
   render = () => (
     <Card is="form" onSubmit={this.handleSubmit}>
-      <Input
+      <InputWithLabel
         id="login"
         type="text"
         name="login"
         label="Login"
         placeholder="login"
       />
-      <Input
+      <InputWithLabel
         id="password"
         type="password"
         name="password"
         label="Password"
         placeholder="Password"
       />
-      <Button>Signin</Button>
+      <Button buttonStyle="primary">Signin</Button>
     </Card>
   )
 }

@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import { Link } from 'react-router-dom'
 
-import { Input, Card, NavLink } from 'ui'
+import { InputWithLabel, Card, NavLink } from 'ui'
 
 const tagToList = ({ id, name }) => (
   <NavLink key={id} as={Link} to={'/tags/' + id}>
@@ -30,7 +30,7 @@ class TagForm extends React.Component {
     return (
       <Fragment>
         <Card is="form" onSubmit={this.handleSubmit}>
-          <Input
+          <InputWithLabel
             id="title"
             type="text"
             name="name"

@@ -14,7 +14,7 @@ import {
 
 const App = () => (
   <Fragment>
-    <Navbar brand="Linkhub" />
+    <Navbar brand="LINKHUB" />
     <Switch>
       <Route exact path="/" component={GreetingPage} />
       <Route path="/links" component={LinksPage} />

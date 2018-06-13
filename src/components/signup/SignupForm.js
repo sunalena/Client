@@ -47,7 +47,11 @@ class SignupForm extends React.PureComponent {
     }
   }
   render = () => (
-    <Card is="form" onSubmit={this.handleSubmit(this.props)}>
+    <Card
+      is="form"
+      flexDirection="column"
+      onSubmit={this.handleSubmit(this.props)}
+    >
       <InputWithLabel
         id="firstName"
         type="text"

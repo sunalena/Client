@@ -1,7 +1,7 @@
 const colors = {
   base: '#444',
   bg: 'white',
-  primary: 'blue',
+  primary: '#006699',
   secondary: 'grey',
   accent: 'red',
   darken1: 'rgba(0, 0, 0, 0.125)',
@@ -16,11 +16,21 @@ export const fonts = {
   mono: '"SF Mono", "Roboto Mono", Menlo, monospace'
 }
 
+const fontSizes = [
+  // '0.6rem',
+  '0.7rem',
+  '0.875rem',
+  '1rem',
+  '1.25rem',
+  '1.5rem',
+  '2rem'
+]
+
 export const theme = {
   // breakpoints: [0, 576, 768, 992, 1200],
   // space: [0, 4, 8, 16, 32, 64, 128],
   fonts,
-  // fontSizes: ['0.875rem', '1rem', '1.25rem', '1.5rem', '2rem'],
+  fontSizes,
   weights: {
     normal: 400,
     bold: 700

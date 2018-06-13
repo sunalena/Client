@@ -7,6 +7,7 @@ const Card = styled(Flex)`
   ${space}
   ${borderRadius}
   ${boxShadow}
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
 `
 
 Card.displayName = 'Card'
@@ -14,9 +15,9 @@ Card.displayName = 'Card'
 Card.defaultProps = {
   color: 'base',
   p: 2,
-  bg: 'white',
-  borderRadius: 2,
-  boxShadow: 2
+  bg: 'white'
+  // borderRadius: 2
+  // boxShadow: 2
 }
 
 export { Card }

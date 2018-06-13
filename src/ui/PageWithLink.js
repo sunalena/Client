@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Heading, Flex, Box } from 'rebass'
 
 export const PageWithLink = ({ title, rightLink, children }) => (
-  <Container px={[0, 3]}>
+  <Container maxWidth={800} px={[0, 3]}>
     <Flex my={2}>
       <Heading>{title}</Heading>
       <Box m="auto" />

@@ -12,20 +12,27 @@ import {
   NotFoundPage
 } from './components'
 
-const App = () => (
-  <Fragment>
-    <Navbar brand="LINKHUB" />
-    <Switch>
-      <Route exact path="/" component={GreetingPage} />
-      <Route path="/links" component={LinksPage} />
-      <Route path="/tags" component={TagsPage} />
-      <Route exact path="/signin/" component={SigninPage} />
-      <Route exact path="/signup/" component={SignupPage} />
-      <Route exact path="/instruction/" component={InstructionPage} />
-      <Redirect from="/signout" to="/signin" />
-      <Route component={NotFoundPage} />
-    </Switch>
-  </Fragment>
-)
+class App extends React.Component {
+  shouldComponentUpdate() {
+    return false
+  }
+  render() {
+    return (
+      <Fragment>
+        <Navbar brand="LINKHUB" />
+        <Switch>
+          <Route exact path="/" component={GreetingPage} />
+          <Route path="/links" component={LinksPage} />
+          <Route path="/tags" component={TagsPage} />
+          <Route exact path="/signin/" component={SigninPage} />
+          <Route exact path="/signup/" component={SignupPage} />
+          <Route exact path="/instruction/" component={InstructionPage} />
+          <Redirect from="/signout" to="/signin" />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </Fragment>
+    )
+  }
+}
 
 export default App

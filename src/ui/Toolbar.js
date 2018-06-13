@@ -13,8 +13,8 @@ Toolbar.defaultProps = {
   px: 2,
   color: 'bg',
   bg: 'base',
-  align: 'center',
-  minHeight: '48px'
+  align: 'center'
+  // minHeight: '48px'
 }
 
 export default Toolbar

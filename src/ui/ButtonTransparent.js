@@ -3,6 +3,9 @@ import { themeGet } from 'styled-system'
 import { Button } from './Button'
 
 export const ButtonTransparent = styled(Button)([], props => ({
+  display: 'flex',
+  'justify-content': 'center',
+  'align-items': 'center',
   '&:hover': {
     backgroundColor: `${themeGet('colors.darken1')(props)}`
   },

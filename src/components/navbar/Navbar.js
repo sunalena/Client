@@ -1,25 +1,25 @@
-import React, { Fragment, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Toolbar,
   Box,
   Flex,
-  NavLink,
   Fixed,
   Container,
-  Text,
   Hide,
-  ButtonTransparent,
-  Image
+  ButtonTransparent
 } from 'ui'
 
 import User from './User'
 
-const Links = ({ isOpen }) => (
+const Links = ({ isOpen, onClick }) => (
   <Hide
+    is="form"
+    onClick={onClick}
     hidden={!isOpen && [true, false]}
     flexDirection={['column', 'row']}
     w={1}
+    alignItems={['flex-start', 'center']}
   >
     <ButtonTransparent is={Link} mx={[0, 2]} to={'/links'}>
       Links
@@ -36,8 +36,16 @@ const Links = ({ isOpen }) => (
 )
 export class Navbar extends PureComponent {
   state = { isOpen: false }
+
   toggle = () => {
     this.setState({ isOpen: !this.state.isOpen })
+  }
+
+  handleOnClick = event => {
+    event.preventDefault()
+    if (this.state.isOpen) {
+      this.toggle()
+    }
   }
   render() {
     const { brand } = this.props
@@ -64,7 +72,7 @@ export class Navbar extends PureComponent {
                 </ButtonTransparent>
               </Hide>
             </Flex>
-            <Links isOpen={isOpen} />
+            <Links isOpen={isOpen} onClick={this.handleOnClick} />
           </Container>
         </Toolbar>
       </Fixed>

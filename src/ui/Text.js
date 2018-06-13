@@ -25,4 +25,5 @@ Text.defaultProps = {
   //   mx: [0, 1, 2, 3]
   // color: '#FFF'
   //   bg: 'test'
+  // lineHeight: '1'
 }

@@ -31,7 +31,7 @@ class SigninForm extends Component {
   }
 
   render = () => (
-    <Card is="form" onSubmit={this.handleSubmit}>
+    <Card is="form" flexDirection="column" onSubmit={this.handleSubmit}>
       <InputWithLabel
         id="login"
         type="text"
@@ -46,7 +46,7 @@ class SigninForm extends Component {
         label="Password"
         placeholder="Password"
       />
-      <Button buttonStyle="primary">Signin</Button>
+      <Button>Signin</Button>
     </Card>
   )
 }

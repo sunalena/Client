@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { Loader, InputWithLabel, Box } from 'ui'
+import { Loader, InputWithLabel, Box, Heading } from 'ui'
 
 import LinkItem from './LinkItem'
 
@@ -22,14 +22,11 @@ class LinksList extends Component {
     const inputs = event.target.elements
     const searchValue = inputs.search.value
     this.props.refetch({ searchValue })
-    console.log('LinksList', searchValue)
   }
 
   render() {
-    const { loading, error, mainQuery, loadMore } = this.props
-    if (loading) return <Loader />
-    if (error) return <h3>Error</h3>
-
+    console.log('LinksList')
+    const { loading, error, mainQuery = {}, loadMore } = this.props
     const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
     return (
       <Fragment>
@@ -42,14 +39,19 @@ class LinksList extends Component {
             placeholder="Search link"
           />
         </Box>
-        <InfiniteScroll
-          loadMore={loadMore}
-          hasMore={hasNextPage}
-          initialLoad={false}
-          loader={<p key={'00'}>Loading...</p>}
-        >
-          {nodes.map(this.renderLink)}
-        </InfiniteScroll>
+        {loading && <Loader />}
+        {error && <Heading h3="true">Error</Heading>}
+        {!loading &&
+          !error && (
+            <InfiniteScroll
+              loadMore={loadMore}
+              hasMore={hasNextPage}
+              initialLoad={false}
+              loader={<p key={'00'}>Loading...</p>}
+            >
+              {nodes.map(this.renderLink)}
+            </InfiniteScroll>
+          )}
       </Fragment>
     )
   }

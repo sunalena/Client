@@ -11,7 +11,6 @@ class LinkPage extends Component {
       data: { loading, link = {} }
     } = this.props
     const { title, author = {}, preview, way, imageUrl } = link
-    console.log('LinkPage', this.props)
     return loading ? (
       <Loader />
     ) : (

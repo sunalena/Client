@@ -59,7 +59,7 @@ class LinkForm extends React.Component {
   render() {
     const { loading, allTags } = this.props
     return (
-      <Card is="form" onSubmit={this.handleSubmit}>
+      <Card is="form" flexDirection="column" onSubmit={this.handleSubmit}>
         <Input
           id="link"
           type="text"

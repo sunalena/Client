@@ -10,7 +10,11 @@ const tagToList = ({ id, name }) => (
 
 const TagsList = ({ loading, error, fetchMore, allTags }) =>
   !loading &&
-  !error && <Flex flexDirection="column">{allTags.nodes.map(tagToList)}</Flex>
+  !error && (
+    <Flex flexDirection="column" alignItems="flex-start">
+      {allTags.nodes.map(tagToList)}
+    </Flex>
+  )
 
 const ALL_TAGS = gql`
   {

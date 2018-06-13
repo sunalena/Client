@@ -13,7 +13,8 @@ import {
   Subhead,
   Text,
   NavLink,
-  ButtonTransparent
+  ButtonTransparent,
+  CheckBadge
 } from 'ui'
 
 class LinkItem extends Component {
@@ -31,10 +32,16 @@ class LinkItem extends Component {
       preview,
       imageUrl,
       id,
-      createdAt
+      createdAt,
+      linkTagsByLinkId = {}
     } = this.props
     if (loading) return <Loader />
     const postDate = new Date(createdAt)
+    const tagNodes = linkTagsByLinkId.nodes || []
+    const tags =
+      tagNodes.length > 0
+        ? tagNodes.map(({ tagByTagId = {} }) => ({ ...tagByTagId }))
+        : []
     return (
       <Card
         is={Flex}
@@ -43,15 +50,29 @@ class LinkItem extends Component {
         flexDirection={['column-reverse', null, 'row']}
       >
         <Box w={imageUrl ? [1, null, 1 / 2] : 1} py={[2, 3]} px={[3, 4]}>
-          <Subhead py={3}>{title}</Subhead>
+          <Subhead py={2}>{title}</Subhead>
           {author.fullName && (
-            <Text fontSize={1}>
-              The link was added by
-              <Link to={`/persons/${author.id}`}>{` ${author.fullName}`}</Link>
-            </Text>
+            <Flex
+              mb={3}
+              flexDirection="row"
+              alignItems="center"
+              color="primary"
+            >
+              <Text fontSize={1}>The link was added by </Text>
+              <ButtonTransparent to={`/persons/${author.id}`} px={1}>
+                {author.fullName}
+              </ButtonTransparent>
+            </Flex>
           )}
           <Text fontSize={1}>{preview}</Text>
-          <Flex flexDirection="row" alignItems="center" mt={4}>
+          <Box mt={2}>
+            {tags.map(({ id, name }) => (
+              <CheckBadge key={id} my={1} checked={true}>
+                {name}
+              </CheckBadge>
+            ))}
+          </Box>
+          <Flex flexDirection="row" alignItems="center">
             <ButtonTransparent is={NavLink} href={way}>
               {!!createdAt && postDate.toLocaleString()}
             </ButtonTransparent>
@@ -65,9 +86,9 @@ class LinkItem extends Component {
           </Flex>
         </Box>
         {imageUrl && (
-          <Box w={[1, null, 1 / 2]} p={0}>
+          <Flex w={[1, null, 1 / 2]} p={0} alignItems="center">
             <Image w={1} is="img" src={imageUrl} alt="" />
-          </Box>
+          </Flex>
         )}
       </Card>
     )
@@ -85,6 +106,14 @@ LinkItem.fragments = {
       author: personByPersonId {
         id
         fullName
+      }
+      linkTagsByLinkId {
+        nodes {
+          tagByTagId {
+            name
+            id
+          }
+        }
       }
       imageUrl
       createdAt

@@ -25,7 +25,6 @@ class LinksList extends Component {
   }
 
   render() {
-    console.log('LinksList')
     const { loading, error, mainQuery = {}, loadMore } = this.props
     const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
     return (

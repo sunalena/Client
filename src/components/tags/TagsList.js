@@ -33,4 +33,7 @@ const props = ({ data: { loading, error, allTags, fetchMore } }) => ({
   fetchMore,
   allTags
 })
-export default graphql(ALL_TAGS, { props })(TagsList)
+export default graphql(ALL_TAGS, {
+  props,
+  options: { fetchPolicy: 'network-only' }
+})(TagsList)

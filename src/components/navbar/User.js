@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { signoutSuccess as signout } from 'redux/modules/auth'
 import { Link, withRouter } from 'react-router-dom'
 
-import { ButtonTransparent } from 'ui'
+import { Button } from 'ui'
 
 const handleClickSignOut = (signout, history) => async event => {
   event.preventDefault()
@@ -14,20 +14,17 @@ const handleClickSignOut = (signout, history) => async event => {
 
 const User = ({ authenticated, userName, signout, history }) =>
   authenticated ? (
-    <ButtonTransparent
-      mx={[0, 2]}
-      onClick={handleClickSignOut(signout, history)}
-    >
+    <Button mx={[0, 2]} onClick={handleClickSignOut(signout, history)}>
       Signout
-    </ButtonTransparent>
+    </Button>
   ) : (
     <Fragment>
-      <ButtonTransparent is={Link} mx={[0, 2]} to={'/signin'}>
+      <Button is={Link} mx={[0, 2]} to={'/signin'}>
         Signin
-      </ButtonTransparent>
-      <ButtonTransparent is={Link} mx={[0, 2]} to={'/signup'}>
+      </Button>
+      <Button is={Link} mx={[0, 2]} to={'/signup'}>
         Signup
-      </ButtonTransparent>
+      </Button>
     </Fragment>
   )
 

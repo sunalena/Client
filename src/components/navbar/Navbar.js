@@ -1,14 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  Toolbar,
-  Box,
-  Flex,
-  Fixed,
-  Container,
-  Hide,
-  ButtonTransparent
-} from 'ui'
+import { Toolbar, Box, Flex, Fixed, Container, Hide, Button } from 'ui'
 
 import User from './User'
 
@@ -21,15 +13,15 @@ const Links = ({ isOpen, onClick }) => (
     w={1}
     alignItems={['flex-start', 'center']}
   >
-    <ButtonTransparent is={Link} mx={[0, 2]} to={'/links'}>
+    {/* <Button is={Link} mx={[0, 2]} to={'/links'}>
       Links
-    </ButtonTransparent>
-    <ButtonTransparent is={Link} mx={[0, 2]} to={'/tags'}>
+    </Button> */}
+    <Button is={Link} mx={[0, 2]} to={'/tags'}>
       Tags
-    </ButtonTransparent>
-    <ButtonTransparent is={Link} mx={[0, 2]} to={'/users'}>
+    </Button>
+    <Button is={Link} mx={[0, 2]} to={'/users'}>
       Users
-    </ButtonTransparent>
+    </Button>
     <Box mx="auto" />
     <User />
   </Hide>
@@ -62,14 +54,12 @@ export class Navbar extends PureComponent {
             px={0}
           >
             <Flex>
-              <ButtonTransparent is={Link} mx={0} to={'/'}>
+              <Button is={Link} mx={0} to={'/'}>
                 {brand}
-              </ButtonTransparent>
+              </Button>
               <Box mx="auto" />
               <Hide hidden={[false, true]} alignItems="center">
-                <ButtonTransparent onClick={this.toggle}>
-                  MENU
-                </ButtonTransparent>
+                <Button onClick={this.toggle}>MENU</Button>
               </Hide>
             </Flex>
             <Links isOpen={isOpen} onClick={this.handleOnClick} />

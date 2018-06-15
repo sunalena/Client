@@ -13,7 +13,7 @@ import {
   Subhead,
   Text,
   NavLink,
-  ButtonTransparent,
+  Button,
   CheckBadge
 } from 'ui'
 
@@ -58,31 +58,33 @@ class LinkItem extends Component {
               alignItems="center"
               color="primary"
             >
-              <Text fontSize={1}>The link was added by </Text>
-              <ButtonTransparent to={`/persons/${author.id}`} px={1}>
+              <Text fontSize={1} py={2}>
+                The link was added by{' '}
+              </Text>
+              <Button is={Link} to={`/persons/${author.id}`} px={1}>
                 {author.fullName}
-              </ButtonTransparent>
+              </Button>
             </Flex>
           )}
           <Text fontSize={1}>{preview}</Text>
-          <Box mt={2}>
+          <Box mt={3} mx={-1}>
             {tags.map(({ id, name }) => (
               <CheckBadge key={id} my={1} checked={true}>
                 {name}
               </CheckBadge>
             ))}
           </Box>
-          <Flex flexDirection="row" alignItems="center">
-            <ButtonTransparent is={NavLink} href={way}>
+          <Flex flexDirection="row" alignItems="center" mx={-3} mt={3}>
+            <Button is={NavLink} href={way}>
               {!!createdAt && postDate.toLocaleString()}
-            </ButtonTransparent>
+            </Button>
             <Box m="auto" />
-            <ButtonTransparent
+            <Button
               is={Link}
               to={userId === author.id ? `/links/${id}` : `/links/${id}`}
             >
               {userId === author.id ? 'EDIT' : 'VIEW'}
-            </ButtonTransparent>
+            </Button>
           </Flex>
         </Box>
         {imageUrl && (

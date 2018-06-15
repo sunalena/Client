@@ -1,7 +1,6 @@
 export { BackgroundImage } from './BackgroundImage'
 export { Box } from './Box'
 export { Button } from './Button'
-export { ButtonTransparent } from './ButtonTransparent'
 export { Card } from './Card'
 export { CheckBadge } from './CheckBadge'
 export { Close } from './Close'

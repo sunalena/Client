@@ -21,7 +21,7 @@ class App extends React.Component {
       <Fragment>
         <Navbar brand="LINKHUB" />
         <Switch>
-          <Route exact path="/" component={GreetingPage} />
+          <Route exact path="/" component={LinksPage} />
           <Route path="/links" component={LinksPage} />
           <Route path="/tags" component={TagsPage} />
           <Route exact path="/signin/" component={SigninPage} />

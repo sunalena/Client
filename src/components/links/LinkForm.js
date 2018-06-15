@@ -80,7 +80,7 @@ class LinkForm extends React.Component {
           id="preview"
           type="textarea"
           name="preview"
-          textarea={true}
+          // textarea={true}
           value=""
           label="Preview"
           onChange={this.handleChangeLink}
@@ -94,7 +94,7 @@ class LinkForm extends React.Component {
           onChange={this.handleChangeLink}
         />
         <Box>{!loading && allTags.nodes.map(this.tagToButton)}</Box>
-        <Button>Submit</Button>
+        <Button buttonStyle="primary">Submit</Button>
       </Card>
     )
   }

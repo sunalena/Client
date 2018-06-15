@@ -7,7 +7,6 @@ import {
   SignupPage,
   LinksPage,
   TagsPage,
-  GreetingPage,
   InstructionPage,
   NotFoundPage
 } from './components'

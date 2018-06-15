@@ -6,6 +6,8 @@ const Button = sys(
     is: 'button',
     fontSize: 1,
     fontWeight: 'bold',
+    bg: 'transparent',
+    color: 'inherit',
     // lineHeight: 1,
     m: 0,
     px: 3,

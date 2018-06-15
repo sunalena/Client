@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
 import { Box, Card, Button, Input, CheckBadge } from 'ui'
+import { mutateProp } from 'utils'
 
-class LinkForm extends React.Component {
+class LinkForm extends Component {
   state = {
     cSelected: [],
     link: '',
@@ -31,14 +32,27 @@ class LinkForm extends React.Component {
 
   handleSubmit = async event => {
     event.preventDefault()
-    const { createLink } = this.props
+    const { cSelected = [] } = this.state
+    const { createLink, createLinkTag, currentPerson } = this.props
     const inputs = event.target.elements
     const title = inputs.title.value
     const way = inputs.link.value
-    const personId = 4
-
+    const preview = inputs.preview.value
+    const imageUrl = inputs.imageUrl.value
+    const personId = currentPerson.id
     try {
-      createLink({ title, way, personId })
+      const { data } = await createLink({
+        title,
+        way,
+        personId,
+        imageUrl,
+        preview
+      })
+      console.log('createLink', data)
+      const { linkId } = data.createLink.link
+      cSelected.forEach(tagId => {
+        createLinkTag({ linkId, tagId })
+      })
     } catch (error) {
       console.log('there was an error sending the query', error)
     }
@@ -56,45 +70,29 @@ class LinkForm extends React.Component {
     </CheckBadge>
   )
 
+  renderInput = (name, label, placeholder) => (
+    <Input
+      id={name}
+      type="text"
+      name={name}
+      label={label}
+      placeholder={placeholder}
+      onChange={this.handleChangeLink}
+    />
+  )
+
   render() {
     const { loading, allTags } = this.props
     return (
       <Card is="form" flexDirection="column" onSubmit={this.handleSubmit}>
-        <Input
-          id="link"
-          type="text"
-          name="link"
-          label="Link"
-          placeholder="Insert link"
-          onChange={this.handleChangeLink}
-        />
-        <Input
-          id="title"
-          type="text"
-          name="title"
-          label="Title"
-          placeholder="Input Title"
-          onChange={this.handleChangeLink}
-        />
-        <Input
-          id="preview"
-          type="textarea"
-          name="preview"
-          // textarea={true}
-          value=""
-          label="Preview"
-          onChange={this.handleChangeLink}
-        />
-        <Input
-          id="image"
-          type="link"
-          name="image"
-          label="Image Link"
-          placeholder="Insert image link"
-          onChange={this.handleChangeLink}
-        />
+        {this.renderInput('link', 'Link', 'Insert link')}
+        {this.renderInput('title', 'Title', 'Input Title')}
+        {this.renderInput('preview', 'Preview', 'Input Preview')}
+        {this.renderInput('imageUrl', 'Image Link', 'Insert image link')}
         <Box>{!loading && allTags.nodes.map(this.tagToButton)}</Box>
-        <Button buttonStyle="primary">Submit</Button>
+        <Button buttonStyle="primary" type="submit">
+          Submit
+        </Button>
       </Card>
     )
   }
@@ -102,6 +100,9 @@ class LinkForm extends React.Component {
 
 const ALL_TAG_QUERY = gql`
   query AllTagQuery {
+    currentPerson {
+      id
+    }
     allTags {
       nodes {
         id
@@ -112,31 +113,48 @@ const ALL_TAG_QUERY = gql`
 `
 
 const ADD_LINK = gql`
-  mutation createLink($title: String!, $way: String!, $personId: Int!) {
+  mutation createLink(
+    $title: String!
+    $way: String!
+    $preview: String
+    $imageUrl: String
+    $personId: Int!
+  ) {
     createLink(
-      input: { link: { title: $title, way: $way, personId: $personId } }
+      input: {
+        link: {
+          title: $title
+          way: $way
+          personId: $personId
+          preview: $preview
+          imageUrl: $imageUrl
+        }
+      }
     ) {
+      link {
+        linkId: id
+      }
+    }
+  }
+`
+
+const ADD_LINK_TAG = gql`
+  mutation createLinkTag($linkId: Int!, $tagId: Int!) {
+    createLinkTag(input: { linkTag: { linkId: $linkId, tagId: $tagId } }) {
       clientMutationId
     }
   }
 `
 
-const configObject = {
-  props: ({ mutate }) => ({
-    createLink: variables =>
-      mutate({
-        variables
-      })
-  })
-}
-
-const props = ({ data: { loading, error, allTags } }) => ({
+const props = ({ data: { loading, error, allTags, currentPerson } }) => ({
   loading,
   error,
-  allTags
+  allTags,
+  currentPerson
 })
 
 export default compose(
-  graphql(ADD_LINK, configObject),
-  graphql(ALL_TAG_QUERY, { props })
+  graphql(ALL_TAG_QUERY, { props }),
+  graphql(ADD_LINK, mutateProp('createLink')),
+  graphql(ADD_LINK_TAG, mutateProp('createLinkTag'))
 )(LinkForm)

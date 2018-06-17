@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 
-import { Box, Card, Button, Input, CheckBadge } from 'ui'
+import { Box, Card, Button, Input, CheckBadge, Text, Loader } from 'ui'
 import { mutateProp } from 'utils'
 
 class LinkForm extends Component {
@@ -82,7 +82,9 @@ class LinkForm extends Component {
   )
 
   render() {
-    const { loading, allTags } = this.props
+    const { loading, error, allTags } = this.props
+    if (loading) return <Loader />
+    if (error) return <Text>Auth error</Text>
     return (
       <Card is="form" flexDirection="column" onSubmit={this.handleSubmit}>
         {this.renderInput('link', 'Link', 'Insert link')}
@@ -91,7 +93,7 @@ class LinkForm extends Component {
         {this.renderInput('imageUrl', 'Image Link', 'Insert image link')}
         <Box>{!loading && allTags.nodes.map(this.tagToButton)}</Box>
         <Button buttonStyle="primary" type="submit">
-          Submit
+          Create
         </Button>
       </Card>
     )

@@ -7,11 +7,20 @@ import { mutateProp } from 'utils'
 
 class LinkForm extends Component {
   state = {
-    cSelected: [],
-    link: '',
+    cSelected: []
+  }
+
+  values = {
     title: '',
+    way: '',
     preview: '',
-    image: ''
+    imageUrl: '',
+    personId: ''
+  }
+
+  handleChange = e => {
+    const { id, value } = e.target
+    this.values[id] = value
   }
 
   handleChangeLink = event => {
@@ -34,19 +43,11 @@ class LinkForm extends Component {
     event.preventDefault()
     const { cSelected = [] } = this.state
     const { createLink, createLinkTag, currentPerson } = this.props
-    const inputs = event.target.elements
-    const title = inputs.title.value
-    const way = inputs.link.value
-    const preview = inputs.preview.value
-    const imageUrl = inputs.imageUrl.value
     const personId = currentPerson.id
     try {
       const { data } = await createLink({
-        title,
-        way,
-        personId,
-        imageUrl,
-        preview
+        ...this.values,
+        personId
       })
       console.log('createLink', data)
       const { linkId } = data.createLink.link
@@ -86,7 +87,12 @@ class LinkForm extends Component {
     if (loading) return <Loader />
     if (error) return <Text>Auth error</Text>
     return (
-      <Card is="form" flexDirection="column" onSubmit={this.handleSubmit}>
+      <Card
+        is="form"
+        flexDirection="column"
+        onChange={this.handleChange}
+        onSubmit={this.handleSubmit}
+      >
         {this.renderInput('link', 'Link', 'Insert link')}
         {this.renderInput('title', 'Title', 'Input Title')}
         {this.renderInput('preview', 'Preview', 'Input Preview')}

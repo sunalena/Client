@@ -6,7 +6,8 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { Loader, InputWithLabel, Box, Heading } from 'ui'
+import { Loader, Box, Heading } from 'ui'
+import { SearchInput } from 'components/SearchInput'
 
 import LinkItem from './LinkItem'
 
@@ -19,7 +20,7 @@ class LinksList extends Component {
   )
   handleSearch = event => {
     event.preventDefault()
-    const { refetch, history, location } = this.props
+    const { history, location } = this.props
     const inputs = event.target.elements
     const search = inputs.search.value
     location.search = search ? new URLSearchParams({ search }).toString() : ''
@@ -27,18 +28,22 @@ class LinksList extends Component {
   }
 
   render() {
-    const { loading, error, mainQuery = {}, loadMore, location } = this.props
+    const {
+      loading,
+      error,
+      mainQuery = {},
+      loadMore,
+      location,
+      history
+    } = this.props
     const search = new URLSearchParams(location.search).get('search')
     const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
     return (
       <Fragment>
         <Box is="form" onSubmit={this.handleSearch}>
-          <InputWithLabel
-            id="search"
-            type="text"
-            name="search"
-            label="Search"
-            placeholder="Search link"
+          <SearchInput
+            location={location}
+            history={history}
             defaultValue={search}
           />
         </Box>
@@ -139,10 +144,8 @@ const props = ({
 })
 
 const configObject = {
-  options: ({ endCursor, location, match }) => {
+  options: ({ location, match }) => {
     const search = new URLSearchParams(location.search).get('search') || ''
-    console.log(match.params)
-    // const restVar = {}
     return {
       variables: { search, first: 5, ...match.params }
       // fetchPolicy: 'network-only'

@@ -19,9 +19,6 @@ const Links = ({ isOpen, onClick }) => (
     <Button is={Link} mx={[0, 2]} to={'/tags'}>
       Tags
     </Button>
-    <Button is={Link} mx={[0, 2]} to={'/users'}>
-      Users
-    </Button>
     <Box mx="auto" />
     <User />
   </Hide>

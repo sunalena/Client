@@ -3,19 +3,17 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
+import { Form } from 'react-final-form'
 
 import { signinSuccess } from 'redux/modules/auth'
-import { InputWithLabel, Card, Button } from 'ui'
+import { Card, Button } from 'ui'
+import { subscription, renderInput } from 'ui/utils'
 
 class SigninForm extends Component {
-  handleSubmit = async event => {
-    event.preventDefault()
+  onSubmit = async values => {
     const { client, signinSuccess, authenticate, history } = this.props
-    const inputs = event.target.elements
-    const login = inputs.login.value
-    const password = inputs.password.value
     try {
-      const { data } = await authenticate({ login, password })
+      const { data } = await authenticate({ ...values })
       const token = data.authenticate.jwtToken
       const userId = data.authenticate.query.currentPerson.userId
       if (token && userId) {
@@ -30,25 +28,27 @@ class SigninForm extends Component {
     }
   }
 
-  render = () => (
-    <Card is="form" flexDirection="column" onSubmit={this.handleSubmit}>
-      <InputWithLabel
-        id="login"
-        type="text"
-        name="login"
-        label="Login"
-        placeholder="login"
+  render() {
+    return (
+      <Form
+        onSubmit={this.onSubmit}
+        subscription={subscription}
+        render={({ handleSubmit, submitting }) => (
+          <Card
+            is="form"
+            onSubmit={handleSubmit}
+            flexDirection="column"
+            maxWidth={400}
+            mx="auto"
+          >
+            {renderInput('login', 'Login', 'Input login')}
+            {renderInput('password', 'Password', 'Input password', 'password')}
+            <Button disabled={submitting}>Signin</Button>
+          </Card>
+        )}
       />
-      <InputWithLabel
-        id="password"
-        type="password"
-        name="password"
-        label="Password"
-        placeholder="Password"
-      />
-      <Button>Signin</Button>
-    </Card>
-  )
+    )
+  }
 }
 
 const AUTH_MUTATION = gql`

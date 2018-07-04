@@ -1,6 +1,5 @@
 // LucasBassetti/react-css-loaders
 
-import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
 const loading = keyframes`

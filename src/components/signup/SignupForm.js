@@ -1,38 +1,28 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
+import { Form } from 'react-final-form'
 
-import { InputWithLabel, Card, Button } from 'ui'
+import { Card, Button } from 'ui'
 import { signinSuccess } from 'redux/modules/auth'
+import { subscription, renderInput } from 'ui/utils'
+
+const validate = values => {
+  const errors = {}
+  if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = 'Passwords must match'
+  }
+  return errors
+}
 
 class SignupForm extends React.PureComponent {
-  handleSubmit = ({
-    client,
-    signinSuccess,
-    signUp,
-    history
-  }) => async event => {
-    // console.log(event)
-    // return true
-    event.preventDefault()
-    const {
-      firstName: { value: firstName },
-      lastName: { value: lastName },
-      email: { value: email },
-      login: { value: login },
-      password: { value: password }
-    } = event.target.elements
+  onSubmit = async values => {
+    console.log('values', values)
+    const { client, signinSuccess, signUp, history } = this.props
     try {
-      const { data } = await signUp({
-        firstName,
-        lastName,
-        email,
-        login,
-        password
-      })
+      const { data } = await signUp({ ...values })
       const token = data.authenticate.jwtToken
       const userId = data.authenticate.query.currentPerson.userId
       if (token && userId) {
@@ -46,50 +36,43 @@ class SignupForm extends React.PureComponent {
       console.log('there was an error sending the query', error)
     }
   }
-  render = () => (
-    <Card
-      is="form"
-      flexDirection="column"
-      onSubmit={this.handleSubmit(this.props)}
-    >
-      <InputWithLabel
-        id="firstName"
-        type="text"
-        name="firstName"
-        label="First name"
-        placeholder="Input first name"
+
+  checkConfirm = value => (value ? undefined : 'Required')
+
+  render() {
+    return (
+      <Form
+        onSubmit={this.onSubmit}
+        subscription={subscription}
+        validate={validate}
+        render={({ handleSubmit, submitting, values }) => (
+          <Card
+            is="form"
+            onSubmit={handleSubmit}
+            flexDirection="column"
+            maxWidth={400}
+            mx="auto"
+          >
+            {renderInput('login', 'Login *', 'Input login')}
+            {renderInput('firstName', 'Name *', 'Input name')}
+            {renderInput(
+              'password',
+              'Password *',
+              'Input password',
+              'password'
+            )}
+            {renderInput(
+              'confirmPassword',
+              'Confirm password *',
+              'Confirm password',
+              'password'
+            )}
+            <Button disabled={submitting}>Signup</Button>
+          </Card>
+        )}
       />
-      <InputWithLabel
-        id="lastName"
-        type="text"
-        name="lastName"
-        label="Last name"
-        placeholder="Input last name"
-      />
-      <InputWithLabel
-        id="email"
-        type="email"
-        name="email"
-        label="E-mail"
-        placeholder="Input e-mail"
-      />
-      <InputWithLabel
-        id="login"
-        type="text"
-        name="login"
-        label="Login"
-        placeholder="Input login"
-      />
-      <InputWithLabel
-        id="password"
-        type="password"
-        name="password"
-        label="Password"
-        placeholder="Input password"
-      />
-      <Button>Signup</Button>
-    </Card>
-  )
+    )
+  }
 }
 
 const REG_MUTATION = gql`
@@ -133,16 +116,12 @@ const configObject = {
   })
 }
 
-const mapDispatchToProps = dispatch => ({
-  signinSuccess: bindActionCreators(signinSuccess, dispatch)
-})
-
 export default compose(
   withRouter,
   withApollo,
   connect(
     null,
-    mapDispatchToProps
+    { signinSuccess }
   ),
   graphql(REG_MUTATION, configObject)
 )(SignupForm)

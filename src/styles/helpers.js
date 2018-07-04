@@ -1,3 +1,5 @@
+import { complexStyle, responsiveStyle } from 'styled-system'
+
 const getColorNames = (count, name) =>
   [...Array(count).keys()].map(i => (i === 0 ? name : name + i))
 
@@ -31,3 +33,16 @@ export const generateColors = (baseColors, depth = 5) => {
     {}
   )
 }
+
+export const hidden = responsiveStyle({
+  prop: 'hidden',
+  cssProperty: 'display',
+  getter: hidden => (hidden ? 'none' : 'flex')
+})
+
+export const buttonStyle = complexStyle({
+  prop: 'buttonStyle',
+  key: 'buttonStyle'
+})
+
+export const selectColor = color => ({ theme }) => theme.colors[color]

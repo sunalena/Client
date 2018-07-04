@@ -2,35 +2,41 @@ import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import { Form } from 'react-final-form'
+import { Field } from 'react-final-form'
+import arrayMutators from 'final-form-arrays'
+import { FieldArray } from 'react-final-form-arrays'
 
-import { Box, Card, Button, Input, CheckBadge, Text, Loader } from 'ui'
+import { Box, Card, Button, CheckBadge as CheckBadge_, Text, Loader } from 'ui'
 import { mutateProp } from 'utils'
 import { subscription, renderInput } from 'ui/utils'
-import { Field } from 'react-final-form'
 import { SelectionField } from 'components/selectionField'
 import LinkItem from './LinkItem'
 import { objectDifference, getPatch } from 'utils'
-import { intersection, difference, isEqual } from 'lodash'
+import { difference } from 'lodash'
+
+const CheckBadge = ({ input, ...props }) => (
+  <CheckBadge_
+    {...input}
+    {...props}
+    checked={input.value.checked}
+    onClick={() =>
+      input.onChange({ ...input.value, checked: !input.value.checked })
+    }
+  >
+    {input.value.name}
+  </CheckBadge_>
+)
 
 const SelectAdapter = ({ input, meta, ...rest }) => (
   <SelectionField {...input} defaultValue={meta.initial} {...rest} />
 )
 
 const getTags = (linkTagsByLinkId = {}) => {
-  console.log('getTags')
-
   const { nodes = [] } = linkTagsByLinkId
   return nodes.map(({ tagByTagId }) => tagByTagId.id)
 }
 
-// const combinTags = (tags) = tags.reduce((acc, el)=>acc+)
-
 class LinkForm extends Component {
-  state = {
-    cSelected: [],
-    hash: ''
-  }
-
   static getDerivedStateFromProps(nextProps, state) {
     if (!nextProps.loading && nextProps.hash !== state.hash) {
       const cSelected = getTags(nextProps.linkTagsByLinkId)
@@ -39,61 +45,38 @@ class LinkForm extends Component {
     return null
   }
 
-  onCheckboxBtnClick = event => {
-    const selected = Number(event.target.id)
-    const index = this.state.cSelected.indexOf(selected)
-    if (index < 0) {
-      this.state.cSelected.push(selected)
-    } else {
-      this.state.cSelected.splice(index, 1)
-    }
-    this.setState({ cSelected: [...this.state.cSelected] })
-  }
-
-  onSubmit = async values => {
-    const { cSelected = [] } = this.state
+  onSubmit = async ({ tags, ...values }) => {
     const {
       updateLink,
       createLinkTag,
       deleteLinkTag,
-      initialValues,
+      initialValues: { tags: oldTags, ...initialValues } = {},
       nodeId
     } = this.props
     const diff = objectDifference(values, initialValues)
     const linkPatch = getPatch(diff)
+    const modifiedTags = difference(tags, oldTags)
 
     try {
       if (Object.keys(diff).length > 0) {
         await updateLink({ nodeId, linkPatch })
       }
-      const initSelected = getTags(this.props.linkTagsByLinkId)
-      const add = difference(cSelected, initSelected)
-      const remove = difference(initSelected, cSelected)
-      add.forEach(tagId => {
-        createLinkTag({ linkId: initialValues.id, tagId })
-      })
-      remove.forEach(tagId => {
-        deleteLinkTag({ linkId: initialValues.id, tagId })
+      modifiedTags.forEach(tag => {
+        const tagId = tag.id
+        const linkId = initialValues.id
+        if (tag.checked) {
+          createLinkTag({ linkId, tagId })
+        } else {
+          deleteLinkTag({ linkId, tagId })
+        }
       })
     } catch (error) {
       console.log('there was an error sending the query', error)
     }
   }
 
-  tagToButton = tag => (
-    <CheckBadge
-      key={tag.id}
-      my={1}
-      id={tag.id}
-      onClick={this.onCheckboxBtnClick}
-      checked={this.state.cSelected.includes(tag.id)}
-    >
-      {tag.name}
-    </CheckBadge>
-  )
-
   render() {
-    const { loading, error, allTags, initialValues } = this.props
+    const { loading, error, initialValues } = this.props
     if (loading) return <Loader />
     if (error) return <Text>{JSON.stringify(error)}</Text>
     return (
@@ -101,6 +84,7 @@ class LinkForm extends Component {
         onSubmit={this.onSubmit}
         initialValues={initialValues}
         subscription={subscription}
+        mutators={{ ...arrayMutators }}
         render={({ handleSubmit, form: { reset }, submitting, pristine }) => (
           <Card is="form" flexDirection="column" onSubmit={handleSubmit}>
             {renderInput('way', 'Link', 'Insert link')}
@@ -114,7 +98,21 @@ class LinkForm extends Component {
               type="text"
               placeholder="Select Person Id"
             />
-            <Box>{!loading && allTags.nodes.map(this.tagToButton)}</Box>
+            <FieldArray name="tags">
+              {({ fields }) => (
+                <Box>
+                  {fields.map(name => (
+                    <Field
+                      key={name}
+                      name={name}
+                      type="checkbox"
+                      component={CheckBadge}
+                      my={1}
+                    />
+                  ))}
+                </Box>
+              )}
+            </FieldArray>}
             <Box>
               <Button type="submit" disabled={submitting}>
                 Update
@@ -180,22 +178,36 @@ const DELETE_LINK_TAG = gql`
   }
 `
 
+const checkArrays = (allTags, tags) => {
+  if (!allTags) return []
+  const check = tags.nodes.map(el => el.tagId)
+  return allTags.nodes.map(el => ({
+    ...el,
+    checked: check.indexOf(el.id) >= 0
+  }))
+}
+
 const props = ({
   data: {
     loading,
     error,
     allTags,
-    link: { linkTagsByLinkId, nodeId, ...initialValues } = {}
+    link: { linkTagsByLinkId, nodeId, ...linkValues } = {}
   }
-}) => ({
-  loading,
-  error,
-  allTags,
-  initialValues,
-  linkTagsByLinkId,
-  nodeId,
-  hash: Math.random().toString(36)
-})
+}) => {
+  return {
+    loading,
+    error,
+    allTags,
+    initialValues: {
+      ...linkValues,
+      tags: checkArrays(allTags, linkTagsByLinkId)
+    },
+    linkTagsByLinkId,
+    nodeId,
+    hash: Math.random().toString(36)
+  }
+}
 
 const config = {
   options: ({

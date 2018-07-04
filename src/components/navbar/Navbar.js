@@ -15,10 +15,10 @@ const Links = ({ isOpen, onClick }) => (
   >
     {/* <Button is={Link} mx={[0, 2]} to={'/links'}>
       Links
-    </Button> */}
+    </Button>
     <Button is={Link} mx={[0, 2]} to={'/tags'}>
       Tags
-    </Button>
+    </Button> */}
     <Box mx="auto" />
     <User />
   </Hide>
@@ -59,6 +59,7 @@ export class Navbar extends PureComponent {
                 <Button onClick={this.toggle}>MENU</Button>
               </Hide>
             </Flex>
+            <Box mx="auto" />
             <Links isOpen={isOpen} onClick={this.handleOnClick} />
           </Container>
         </Toolbar>

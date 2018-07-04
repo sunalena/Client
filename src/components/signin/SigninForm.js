@@ -6,7 +6,7 @@ import gql from 'graphql-tag.macro'
 import { Form } from 'react-final-form'
 
 import { signinSuccess } from 'redux/modules/auth'
-import { Card, Button } from 'ui'
+import { Card, Button, Container } from 'ui'
 import { subscription, renderInput } from 'ui/utils'
 
 class SigninForm extends Component {
@@ -16,8 +16,10 @@ class SigninForm extends Component {
       const { data } = await authenticate({ ...values })
       const token = data.authenticate.jwtToken
       const userId = data.authenticate.query.currentPerson.userId
+      const userName = data.authenticate.query.currentPerson.fullName
+
       if (token && userId) {
-        signinSuccess(token, userId)
+        signinSuccess(token, userId, userName)
         await client.resetStore()
         history.replace('/')
       } else {
@@ -30,23 +32,29 @@ class SigninForm extends Component {
 
   render() {
     return (
-      <Form
-        onSubmit={this.onSubmit}
-        subscription={subscription}
-        render={({ handleSubmit, submitting }) => (
-          <Card
-            is="form"
-            onSubmit={handleSubmit}
-            flexDirection="column"
-            maxWidth={400}
-            mx="auto"
-          >
-            {renderInput('login', 'Login', 'Input login')}
-            {renderInput('password', 'Password', 'Input password', 'password')}
-            <Button disabled={submitting}>Signin</Button>
-          </Card>
-        )}
-      />
+      <Container maxWidth={400} color="base">
+        <Form
+          onSubmit={this.onSubmit}
+          subscription={subscription}
+          render={({ handleSubmit, submitting }) => (
+            <Card
+              is="form"
+              onSubmit={handleSubmit}
+              flexDirection="column"
+              mx="auto"
+            >
+              {renderInput('login', 'Login', 'Input login')}
+              {renderInput(
+                'password',
+                'Password',
+                'Input password',
+                'password'
+              )}
+              <Button disabled={submitting}>Signin</Button>
+            </Card>
+          )}
+        />
+      </Container>
     )
   }
 }
@@ -58,6 +66,7 @@ const AUTH_MUTATION = gql`
       query {
         currentPerson {
           userId: id
+          fullName
         }
       }
     }

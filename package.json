@@ -8,18 +8,18 @@
     "final-form": "^4.8.3",
     "final-form-arrays": "^1.0.4",
     "react": "^16.4.1",
-    "react-apollo": "^2.1.5",
+    "react-apollo": "^2.1.9",
     "react-autocomplete": "^1.8.1",
     "react-dom": "^16.4.1",
     "react-final-form": "^3.6.4",
     "react-final-form-arrays": "^1.0.6",
-    "react-infinite-scroller": "^1.1.4",
+    "react-infinite-scroller": "^1.2.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "rebass": "^2.0.0-5",
     "redux": "^4.0.0",
-    "styled-components": "^3.3.2",
+    "styled-components": "^3.3.3",
     "unmaintained-react-scripts-babel-macros": "1.0.13"
   },
   "scripts": {
@@ -32,8 +32,7 @@
   "proxy": "http://localhost:4000",
   "devDependencies": {
     "babel-literal-to-ast": "^2.0.0",
-    "graphql-tag.macro": "^1.0.1",
-    "redux-devtools": "^3.4.1"
+    "graphql-tag.macro": "^1.0.1"
   },
   "prettier": {
     "singleQuote": true,

@@ -14,9 +14,12 @@ const handleClickSignOut = (signout, history) => async event => {
 
 const User = ({ authenticated, userName, signout, history }) =>
   authenticated ? (
-    <Button mx={[0, 2]} onClick={handleClickSignOut(signout, history)}>
-      Signout
-    </Button>
+    <Fragment>
+      <Button mx={[0, 2]}>{userName}</Button>
+      <Button mx={[0, 2]} onClick={handleClickSignOut(signout, history)}>
+        Signout
+      </Button>
+    </Fragment>
   ) : (
     <Fragment>
       <Button is={Link} mx={[0, 2]} to={'/signin'}>
@@ -30,7 +33,7 @@ const User = ({ authenticated, userName, signout, history }) =>
 
 const mapState = ({ auth }, ownProps = {}) => ({
   authenticated: auth.authenticated,
-  userName: auth.userId
+  userName: auth.userName
 })
 
 export default compose(

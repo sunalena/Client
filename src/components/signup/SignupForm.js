@@ -5,7 +5,7 @@ import { withApollo, graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import { Form } from 'react-final-form'
 
-import { Card, Button } from 'ui'
+import { Card, Button, Container } from 'ui'
 import { signinSuccess } from 'redux/modules/auth'
 import { subscription, renderInput } from 'ui/utils'
 
@@ -25,8 +25,10 @@ class SignupForm extends React.PureComponent {
       const { data } = await signUp({ ...values })
       const token = data.authenticate.jwtToken
       const userId = data.authenticate.query.currentPerson.userId
+      const userName = data.authenticate.query.currentPerson.fullName
+
       if (token && userId) {
-        signinSuccess(token, userId)
+        signinSuccess(token, userId, userName)
         await client.resetStore()
         history.replace('/')
       } else {
@@ -41,36 +43,38 @@ class SignupForm extends React.PureComponent {
 
   render() {
     return (
-      <Form
-        onSubmit={this.onSubmit}
-        subscription={subscription}
-        validate={validate}
-        render={({ handleSubmit, submitting, values }) => (
-          <Card
-            is="form"
-            onSubmit={handleSubmit}
-            flexDirection="column"
-            maxWidth={400}
-            mx="auto"
-          >
-            {renderInput('login', 'Login *', 'Input login')}
-            {renderInput('firstName', 'Name *', 'Input name')}
-            {renderInput(
-              'password',
-              'Password *',
-              'Input password',
-              'password'
-            )}
-            {renderInput(
-              'confirmPassword',
-              'Confirm password *',
-              'Confirm password',
-              'password'
-            )}
-            <Button disabled={submitting}>Signup</Button>
-          </Card>
-        )}
-      />
+      <Container maxWidth={400} color="base">
+        <Form
+          onSubmit={this.onSubmit}
+          subscription={subscription}
+          validate={validate}
+          render={({ handleSubmit, submitting, values }) => (
+            <Card
+              is="form"
+              onSubmit={handleSubmit}
+              flexDirection="column"
+              maxWidth={400}
+              mx="auto"
+            >
+              {renderInput('login', 'Login *', 'Input login')}
+              {renderInput('firstName', 'Name *', 'Input name')}
+              {renderInput(
+                'password',
+                'Password *',
+                'Input password',
+                'password'
+              )}
+              {renderInput(
+                'confirmPassword',
+                'Confirm password *',
+                'Confirm password',
+                'password'
+              )}
+              <Button disabled={submitting}>Signup</Button>
+            </Card>
+          )}
+        />
+      </Container>
     )
   }
 }
@@ -94,6 +98,7 @@ const REG_MUTATION = gql`
     ) {
       person {
         id
+        fullName
       }
     }
     authenticate(input: { login: $login, password: $password }) {

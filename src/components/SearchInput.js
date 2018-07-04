@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Flex } from 'ui'
+import { Input, Box } from 'ui'
 
 export class SearchInput extends Component {
   handleSearch = event => {
@@ -14,15 +14,16 @@ export class SearchInput extends Component {
   render() {
     const { defaultValue } = this.props
     return (
-      <Flex is="form" onSubmit={this.handleSearch} w={1}>
+      <Box is="form" onSubmit={this.handleSearch} w={1}>
         <Input
+          w={1}
           id="search"
           name="search"
           defaultValue={defaultValue}
           type="text"
           placeholder="Enter search query"
         />
-      </Flex>
+      </Box>
     )
   }
 }

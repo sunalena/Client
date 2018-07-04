@@ -1,10 +1,11 @@
 import styled from 'styled-components'
-import { space, fontSize, fontFamily } from 'styled-system'
+import { space, fontSize, fontFamily, width } from 'styled-system'
 import { selectColor } from 'styles/helpers'
 const Input = styled.input`
   ${space}
   ${fontSize}
   ${fontFamily}
+  ${width}
   display: flex;
   flex-grow: 2;
   border-radius: 4px;

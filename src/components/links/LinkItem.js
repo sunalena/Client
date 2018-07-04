@@ -85,11 +85,8 @@ class LinkItem extends Component {
               {!!createdAt && postDate.toLocaleString()}
             </Button>
             <Box m="auto" />
-            <Button
-              is={Link}
-              to={userId === person.value ? `/links/${id}` : `/links/${id}`}
-            >
-              {userId === person.id ? 'EDIT' : 'VIEW'}
+            <Button is={Link} to={`/links/${id}`}>
+              EDIT
             </Button>
           </Flex>
         </Box>

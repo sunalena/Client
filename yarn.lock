@@ -6380,7 +6380,7 @@ readdirp@^2.0.0:
     readable-stream "^2.0.2"
     set-immediate-shim "^1.0.1"
 
-rebass@^2.0.0-5:
+rebass@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/rebass/-/rebass-2.0.1.tgz#79dd3e89003af18bba85f7650078f3e2733a5f6d"
   dependencies:

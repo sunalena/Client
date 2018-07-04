@@ -3,6 +3,7 @@ import { Badge } from 'rebass'
 import { themeGet } from 'styled-system'
 
 export const CheckBadge = sc(Badge)`
+  text-decoration: none;
   background: ${({ checked, ...props }) =>
     checked
       ? themeGet('colors.darken4')(props)

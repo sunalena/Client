@@ -22,6 +22,8 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={LinksPage} />
           <Route path="/links" component={LinksPage} />
+          <Route path="/tag" component={LinksPage} />
+          <Route path="/person" component={LinksPage} />
           <Route path="/tags" component={TagsPage} />
           <Route exact path="/signin/" component={SigninPage} />
           <Route exact path="/signup/" component={SignupPage} />

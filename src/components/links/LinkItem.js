@@ -61,7 +61,7 @@ class LinkItem extends Component {
               <Text fontSize={1} py={2}>
                 The link was added by{' '}
               </Text>
-              <Button is={Link} to={`/persons/${author.id}`} px={1}>
+              <Button is={Link} to={`/person/${author.id}/links`} px={1}>
                 {author.fullName}
               </Button>
             </Flex>
@@ -69,7 +69,13 @@ class LinkItem extends Component {
           <Text fontSize={1}>{preview}</Text>
           <Box mt={3} mx={-1}>
             {tags.map(({ id, name }) => (
-              <CheckBadge key={id} my={1} checked={true}>
+              <CheckBadge
+                is={Link}
+                to={`/tag/${id}/links`}
+                key={id}
+                my={1}
+                checked={true}
+              >
                 {name}
               </CheckBadge>
             ))}

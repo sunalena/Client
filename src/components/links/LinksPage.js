@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 
 import { PageWithLink, RightLink } from 'ui'
 
-import LinksList from './LinksList'
+import LinksList, { LinkListByTag } from './LinksList'
 import LinkPage from './LinkPage'
 import LinkForm from './LinkForm'
 
@@ -22,14 +22,17 @@ const rightLink = url => (
   </Fragment>
 )
 
-export const LinksPage = ({ match = {} }) => (
-  <PageWithLink title="Links" rightLink={rightLink(match.url)}>
-    <Switch>
-      <Route exact path={`${match.url}/create`} component={LinkForm} />
-      <Route exact path={`${match.url}/:linkId`} component={LinkPage} />
-    </Switch>
-    <Route exact path={match.url} component={LinksList} />
-  </PageWithLink>
-)
+export const LinksPage = ({ match = {} }) =>
+  console.log(match.url) || (
+    <PageWithLink title="Links" rightLink={rightLink(match.url)}>
+      <Switch>
+        <Route exact path={`/links/create`} component={LinkForm} />
+        <Route exact path={`/links/:linkId`} component={LinkPage} />
+      </Switch>
+      <Route exact path={match.url} component={LinksList} />
+      <Route path={`/tag/:tagId/links`} component={LinkListByTag} />
+      <Route path={`/person/:personId/links`} component={LinksList} />
+    </PageWithLink>
+  )
 
 export default LinksPage

@@ -19,13 +19,16 @@ class LinksList extends Component {
   )
   handleSearch = event => {
     event.preventDefault()
+    const { refetch, history, location } = this.props
     const inputs = event.target.elements
-    const searchValue = inputs.search.value
-    this.props.refetch({ searchValue })
+    const search = inputs.search.value
+    location.search = search ? new URLSearchParams({ search }).toString() : ''
+    history.push(location)
   }
 
   render() {
-    const { loading, error, mainQuery = {}, loadMore } = this.props
+    const { loading, error, mainQuery = {}, loadMore, location } = this.props
+    const search = new URLSearchParams(location.search).get('search')
     const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
     return (
       <Fragment>
@@ -36,6 +39,7 @@ class LinksList extends Component {
             name="search"
             label="Search"
             placeholder="Search link"
+            defaultValue={search}
           />
         </Box>
         {loading && <Loader />}
@@ -56,9 +60,44 @@ class LinksList extends Component {
   }
 }
 
+const ALL_POSTS_BY_TAG = gql`
+  query searchLinkTag(
+    $search: String!
+    $tagId: Int!
+    $first: Int!
+    $after: Cursor
+  ) {
+    mainQuery: searchLinkTag(
+      search: $search
+      condTagId: $tagId
+      first: $first
+      after: $after
+    ) {
+      nodes {
+        ...Link
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+  ${LinkItem.fragments.link}
+`
+
 const ALL_POSTS = gql`
-  query searchLink($searchValue: String!, $first: Int!, $after: Cursor) {
-    mainQuery: searchLink(search: $searchValue, first: $first, after: $after) {
+  query searchLink(
+    $search: String!
+    $first: Int!
+    $after: Cursor
+    $personId: Int
+  ) {
+    mainQuery: searchLink(
+      search: $search
+      condPersonId: $personId
+      first: $first
+      after: $after
+    ) {
       nodes {
         ...Link
       }
@@ -100,20 +139,30 @@ const props = ({
 })
 
 const configObject = {
-  options: ({ endCursor, searchValue = '' }) => ({
-    variables: { searchValue, first: 5 }
-    // fetchPolicy: 'network-only'
-  }),
+  options: ({ endCursor, location, match }) => {
+    const search = new URLSearchParams(location.search).get('search') || ''
+    console.log(match.params)
+    // const restVar = {}
+    return {
+      variables: { search, first: 5, ...match.params }
+      // fetchPolicy: 'network-only'
+    }
+  },
   // force: true,
   props
 }
 
 const mapState = ({ navBar, auth }) => ({
-  searchValue: '',
+  search: '',
   userId: auth.userId
 })
 
 export default compose(
   connect(mapState),
   graphql(ALL_POSTS, configObject)
+)(LinksList)
+
+export const LinkListByTag = compose(
+  connect(mapState),
+  graphql(ALL_POSTS_BY_TAG, configObject)
 )(LinksList)

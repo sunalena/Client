@@ -25,10 +25,9 @@ const rightLink = url => (
 export const LinksPage = ({ match = {} }) => (
   <PageWithLink title="Links" rightLink={rightLink(match.url)}>
     <Switch>
-      <Route exact path={`/links/create`} component={LinkForm} />
-      <Route exact path={`/links/:linkId`} component={LinkPage} />
+      <Route exact path={`/links/:linkId`} component={LinkForm} />
+      <Route exact path={match.url} component={LinksList} />
     </Switch>
-    <Route exact path={match.url} component={LinksList} />
     <Route path={`/tag/:tagId/links`} component={LinkListByTag} />
     <Route path={`/person/:personId/links`} component={LinksList} />
   </PageWithLink>

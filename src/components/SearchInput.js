@@ -14,7 +14,7 @@ export class SearchInput extends Component {
   render() {
     const { defaultValue } = this.props
     return (
-      <Flex onSubmit={this.handleSearch}>
+      <Flex is="form" onSubmit={this.handleSearch} w={1}>
         <Input
           id="search"
           name="search"

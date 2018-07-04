@@ -28,7 +28,7 @@ class LinkItem extends Component {
       userId,
       title,
       way,
-      author = {},
+      person = {},
       preview,
       imageUrl,
       id,
@@ -51,7 +51,7 @@ class LinkItem extends Component {
       >
         <Box w={imageUrl ? [1, null, 1 / 2] : 1} py={[2, 3]} px={[3, 4]}>
           <Subhead py={2}>{title}</Subhead>
-          {author.fullName && (
+          {person.label && (
             <Flex
               mb={3}
               flexDirection="row"
@@ -61,8 +61,8 @@ class LinkItem extends Component {
               <Text fontSize={1} py={2}>
                 The link was added by{' '}
               </Text>
-              <Button is={Link} to={`/person/${author.id}/links`} px={1}>
-                {author.fullName}
+              <Button is={Link} to={`/person/${person.value}/links`} px={1}>
+                {person.label}
               </Button>
             </Flex>
           )}
@@ -87,9 +87,9 @@ class LinkItem extends Component {
             <Box m="auto" />
             <Button
               is={Link}
-              to={userId === author.id ? `/links/${id}` : `/links/${id}`}
+              to={userId === person.value ? `/links/${id}` : `/links/${id}`}
             >
-              {userId === author.id ? 'EDIT' : 'VIEW'}
+              {userId === person.id ? 'EDIT' : 'VIEW'}
             </Button>
           </Flex>
         </Box>
@@ -103,30 +103,52 @@ class LinkItem extends Component {
   }
 }
 
-LinkItem.fragments = {
-  link: gql`
-    fragment Link on Link {
-      id
-      nodeId
-      way
-      title
-      preview
-      author: personByPersonId {
-        id
-        fullName
-      }
-      linkTagsByLinkId {
-        nodes {
-          tagByTagId {
-            name
-            id
-          }
-        }
-      }
-      imageUrl
-      createdAt
+const tagFragment = gql`
+  fragment Tag on Tag {
+    nodeId
+    id
+    name
+  }
+`
+
+const linkTagFragment = gql`
+  fragment LinkTag on LinkTag {
+    nodeId
+    linkId
+    tagId
+    tagByTagId {
+      ...Tag
     }
-  `
+  }
+  ${tagFragment}
+`
+
+const linkFragment = gql`
+  fragment Link on Link {
+    id
+    nodeId
+    way
+    title
+    preview
+    person: personByPersonId {
+      value: id
+      label: fullName
+    }
+    linkTagsByLinkId {
+      nodes {
+        ...LinkTag
+      }
+    }
+    imageUrl
+    createdAt
+  }
+  ${linkTagFragment}
+`
+
+LinkItem.fragments = {
+  link: linkFragment,
+  linkTag: linkTagFragment,
+  tag: tagFragment
 }
 
 export default LinkItem

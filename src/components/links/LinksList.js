@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { Loader, Box, Heading } from 'ui'
+import { Loader, Flex, Button, Heading } from 'ui'
 import { SearchInput } from 'components/SearchInput'
 
 import LinkItem from './LinkItem'
@@ -34,19 +34,23 @@ class LinksList extends Component {
       mainQuery = {},
       loadMore,
       location,
-      history
+      history,
+      refetch
     } = this.props
     const search = new URLSearchParams(location.search).get('search')
     const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
     return (
       <Fragment>
-        <Box is="form" onSubmit={this.handleSearch}>
+        <Flex>
           <SearchInput
             location={location}
             history={history}
             defaultValue={search}
           />
-        </Box>
+          <Button ml={2} onClick={() => refetch()}>
+            Refetch
+          </Button>
+        </Flex>
         {loading && <Loader />}
         {error && <Heading h3="true">Error</Heading>}
         {!loading &&

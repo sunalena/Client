@@ -1,31 +1,42 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
+import { Form } from 'react-final-form'
 
 import { Box, Card, Button, Input, CheckBadge, Text, Loader } from 'ui'
 import { mutateProp } from 'utils'
+import { subscription, renderInput } from 'ui/utils'
+import { Field } from 'react-final-form'
+import { SelectionField } from 'components/selectionField'
+import LinkItem from './LinkItem'
+import { objectDifference, getPatch } from 'utils'
+import { intersection, difference, isEqual } from 'lodash'
+
+const SelectAdapter = ({ input, meta, ...rest }) => (
+  <SelectionField {...input} defaultValue={meta.initial} {...rest} />
+)
+
+const getTags = (linkTagsByLinkId = {}) => {
+  console.log('getTags')
+
+  const { nodes = [] } = linkTagsByLinkId
+  return nodes.map(({ tagByTagId }) => tagByTagId.id)
+}
+
+// const combinTags = (tags) = tags.reduce((acc, el)=>acc+)
 
 class LinkForm extends Component {
   state = {
-    cSelected: []
+    cSelected: [],
+    hash: ''
   }
 
-  values = {
-    title: '',
-    way: '',
-    preview: '',
-    imageUrl: '',
-    personId: ''
-  }
-
-  handleChange = e => {
-    const { id, value } = e.target
-    this.values[id] = value
-  }
-
-  handleChangeLink = event => {
-    const { name, value } = event.target
-    this.setState({ [name]: value })
+  static getDerivedStateFromProps(nextProps, state) {
+    if (!nextProps.loading && nextProps.hash !== state.hash) {
+      const cSelected = getTags(nextProps.linkTagsByLinkId)
+      return { cSelected, hash: nextProps.hash }
+    }
+    return null
   }
 
   onCheckboxBtnClick = event => {
@@ -39,20 +50,30 @@ class LinkForm extends Component {
     this.setState({ cSelected: [...this.state.cSelected] })
   }
 
-  handleSubmit = async event => {
-    event.preventDefault()
+  onSubmit = async values => {
     const { cSelected = [] } = this.state
-    const { createLink, createLinkTag, currentPerson } = this.props
-    const personId = currentPerson.id
+    const {
+      updateLink,
+      createLinkTag,
+      deleteLinkTag,
+      initialValues,
+      nodeId
+    } = this.props
+    const diff = objectDifference(values, initialValues)
+    const linkPatch = getPatch(diff)
+
     try {
-      const { data } = await createLink({
-        ...this.values,
-        personId
+      if (Object.keys(diff).length > 0) {
+        await updateLink({ nodeId, linkPatch })
+      }
+      const initSelected = getTags(this.props.linkTagsByLinkId)
+      const add = difference(cSelected, initSelected)
+      const remove = difference(initSelected, cSelected)
+      add.forEach(tagId => {
+        createLinkTag({ linkId: initialValues.id, tagId })
       })
-      console.log('createLink', data)
-      const { linkId } = data.createLink.link
-      cSelected.forEach(tagId => {
-        createLinkTag({ linkId, tagId })
+      remove.forEach(tagId => {
+        deleteLinkTag({ linkId: initialValues.id, tagId })
       })
     } catch (error) {
       console.log('there was an error sending the query', error)
@@ -71,98 +92,126 @@ class LinkForm extends Component {
     </CheckBadge>
   )
 
-  renderInput = (name, label, placeholder) => (
-    <Input
-      id={name}
-      type="text"
-      name={name}
-      label={label}
-      placeholder={placeholder}
-      onChange={this.handleChangeLink}
-    />
-  )
-
   render() {
-    const { loading, error, allTags } = this.props
+    const { loading, error, allTags, initialValues } = this.props
     if (loading) return <Loader />
-    if (error) return <Text>Auth error</Text>
+    if (error) return <Text>{JSON.stringify(error)}</Text>
     return (
-      <Card
-        is="form"
-        flexDirection="column"
-        onChange={this.handleChange}
-        onSubmit={this.handleSubmit}
-      >
-        {this.renderInput('link', 'Link', 'Insert link')}
-        {this.renderInput('title', 'Title', 'Input Title')}
-        {this.renderInput('preview', 'Preview', 'Input Preview')}
-        {this.renderInput('imageUrl', 'Image Link', 'Insert image link')}
-        <Box>{!loading && allTags.nodes.map(this.tagToButton)}</Box>
-        <Button buttonStyle="primary" type="submit">
-          Create
-        </Button>
-      </Card>
+      <Form
+        onSubmit={this.onSubmit}
+        initialValues={initialValues}
+        subscription={subscription}
+        render={({ handleSubmit, form: { reset }, submitting, pristine }) => (
+          <Card is="form" flexDirection="column" onSubmit={handleSubmit}>
+            {renderInput('way', 'Link', 'Insert link')}
+            {renderInput('title', 'Title', 'Input Title')}
+            {renderInput('preview', 'Preview', 'Input Preview')}
+            {renderInput('imageUrl', 'Image Link', 'Insert image link')}
+            <Field
+              name="person"
+              label="Person"
+              component={SelectAdapter}
+              type="text"
+              placeholder="Select Person Id"
+            />
+            <Box>{!loading && allTags.nodes.map(this.tagToButton)}</Box>
+            <Box>
+              <Button type="submit" disabled={submitting}>
+                Update
+              </Button>
+              <Button type="button" onClick={reset} disabled={pristine}>
+                Reset
+              </Button>
+            </Box>
+          </Card>
+        )}
+      />
     )
   }
 }
 
 const ALL_TAG_QUERY = gql`
-  query AllTagQuery {
-    currentPerson {
-      id
+  query AllTagQuery($id: Int!) {
+    link: linkById(id: $id) {
+      ...Link
     }
     allTags {
       nodes {
-        id
-        name
+        ...Tag
       }
     }
   }
+  ${LinkItem.fragments.link}
 `
 
-const ADD_LINK = gql`
-  mutation createLink(
-    $title: String!
-    $way: String!
-    $preview: String
-    $imageUrl: String
-    $personId: Int!
-  ) {
-    createLink(
-      input: {
-        link: {
-          title: $title
-          way: $way
-          personId: $personId
-          preview: $preview
-          imageUrl: $imageUrl
-        }
-      }
-    ) {
+const UPDATE_LINK = gql`
+  mutation updateLink($nodeId: ID!, $linkPatch: LinkPatch!) {
+    updateLink(input: { nodeId: $nodeId, linkPatch: $linkPatch }) {
+      clientMutationId
       link {
-        linkId: id
+        ...Link
       }
     }
   }
+  ${LinkItem.fragments.link}
 `
 
-const ADD_LINK_TAG = gql`
+const CREATE_LINK_TAG = gql`
   mutation createLinkTag($linkId: Int!, $tagId: Int!) {
-    createLinkTag(input: { linkTag: { linkId: $linkId, tagId: $tagId } }) {
+    createLinkTag: createLinkTag(
+      input: { linkTag: { linkId: $linkId, tagId: $tagId } }
+    ) {
+      clientMutationId
+      linkTag {
+        ...LinkTag
+      }
+    }
+  }
+  ${LinkItem.fragments.linkTag}
+`
+
+const DELETE_LINK_TAG = gql`
+  mutation deleteLinkTag($linkId: Int!, $tagId: Int!) {
+    deleteLinkTag: deleteLinkTagByLinkIdAndTagId(
+      input: { linkId: $linkId, tagId: $tagId }
+    ) {
       clientMutationId
     }
   }
 `
 
-const props = ({ data: { loading, error, allTags, currentPerson } }) => ({
+const props = ({
+  data: {
+    loading,
+    error,
+    allTags,
+    link: { linkTagsByLinkId, nodeId, ...initialValues } = {}
+  }
+}) => ({
   loading,
   error,
   allTags,
-  currentPerson
+  initialValues,
+  linkTagsByLinkId,
+  nodeId,
+  hash: Math.random().toString(36)
 })
 
+const config = {
+  options: ({
+    match: {
+      params: { linkId: id }
+    }
+  }) => ({
+    variables: { id, isList: false },
+    fetchPolicy: 'cache-and-network'
+  }),
+  props
+}
+
 export default compose(
-  graphql(ALL_TAG_QUERY, { props }),
-  graphql(ADD_LINK, mutateProp('createLink')),
-  graphql(ADD_LINK_TAG, mutateProp('createLinkTag'))
+  graphql(ALL_TAG_QUERY, config),
+  graphql(UPDATE_LINK, mutateProp('updateLink')),
+  graphql(CREATE_LINK_TAG, mutateProp('createLinkTag')),
+  graphql(DELETE_LINK_TAG, mutateProp('deleteLinkTag'))
 )(LinkForm)

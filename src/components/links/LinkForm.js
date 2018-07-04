@@ -1,21 +1,19 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag.macro'
-import { Form } from 'react-final-form'
-import { Field } from 'react-final-form'
+import { Form, Field } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
+import { difference } from 'lodash'
 
-import { Box, Card, Button, CheckBadge as CheckBadge_, Text, Loader } from 'ui'
-import { mutateProp } from 'utils'
+import { Box, Card, Button, CheckBadge as CheckBadgeC, Text, Loader } from 'ui'
+import { mutateProp, objectDifference, getPatch } from 'utils'
 import { subscription, renderInput } from 'ui/utils'
 import { SelectionField } from 'components/selectionField'
 import LinkItem from './LinkItem'
-import { objectDifference, getPatch } from 'utils'
-import { difference } from 'lodash'
 
 const CheckBadge = ({ input, ...props }) => (
-  <CheckBadge_
+  <CheckBadgeC
     {...input}
     {...props}
     checked={input.value.checked}
@@ -24,7 +22,7 @@ const CheckBadge = ({ input, ...props }) => (
     }
   >
     {input.value.name}
-  </CheckBadge_>
+  </CheckBadgeC>
 )
 
 const SelectAdapter = ({ input, meta, ...rest }) => (
@@ -37,6 +35,7 @@ const getTags = (linkTagsByLinkId = {}) => {
 }
 
 class LinkForm extends Component {
+  state = { hash: '' }
   static getDerivedStateFromProps(nextProps, state) {
     if (!nextProps.loading && nextProps.hash !== state.hash) {
       const cSelected = getTags(nextProps.linkTagsByLinkId)
@@ -89,7 +88,7 @@ class LinkForm extends Component {
           <Card is="form" flexDirection="column" onSubmit={handleSubmit}>
             {renderInput('way', 'Link', 'Insert link')}
             {renderInput('title', 'Title', 'Input Title')}
-            {renderInput('preview', 'Preview', 'Input Preview')}
+            {renderInput('preview', 'Preview', 'Input Preview', 'text', true)}
             {renderInput('imageUrl', 'Image Link', 'Insert image link')}
             <Field
               name="person"
@@ -98,10 +97,10 @@ class LinkForm extends Component {
               type="text"
               placeholder="Select Person Id"
             />
-            <FieldArray name="tags">
-              {({ fields }) => (
-                <Box>
-                  {fields.map(name => (
+            <Box>
+              <FieldArray name="tags">
+                {({ fields }) =>
+                  fields.map(name => (
                     <Field
                       key={name}
                       name={name}
@@ -109,10 +108,10 @@ class LinkForm extends Component {
                       component={CheckBadge}
                       my={1}
                     />
-                  ))}
-                </Box>
-              )}
-            </FieldArray>}
+                  ))
+                }
+              </FieldArray>
+            </Box>
             <Box>
               <Button type="submit" disabled={submitting}>
                 Update

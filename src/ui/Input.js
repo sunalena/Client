@@ -18,4 +18,6 @@ Input.defaultProps = {
   fontFamily: 'sans'
 }
 
-export { Input }
+const TextArea = Input.withComponent('textarea')
+
+export { Input, TextArea }

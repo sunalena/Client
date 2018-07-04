@@ -1,21 +1,43 @@
 import React, { Fragment } from 'react'
 import { Field } from 'react-final-form'
 
-import { Input, Label } from 'ui'
+import { Input, TextArea, Label } from 'ui'
 
-export const InputAdapter = ({ input, label, meta, placeholder, type }) => (
-  <Fragment>
-    <Label>{label}</Label>
-    {meta.error && meta.touched && <Label color="accent"> {meta.error}</Label>}
-    <Input {...input} type={type} placeholder={placeholder} />
-  </Fragment>
-)
+export const InputAdapter = ({
+  input,
+  label,
+  meta,
+  placeholder,
+  type,
+  textarea
+}) => {
+  const InputComponent = textarea ? TextArea : Input
+  return (
+    <Fragment>
+      <Label>{label}</Label>
+      {meta.error &&
+        meta.touched && <Label color="accent"> {meta.error}</Label>}
+      <InputComponent
+        {...input}
+        type={type}
+        rows={7}
+        placeholder={placeholder}
+      />
+    </Fragment>
+  )
+}
 
 export const required = value => (value ? undefined : 'Required')
 
 export const subscription = { submitting: true, pristine: true }
 
-export const renderInput = (name, label, placeholder, type = 'text') => (
+export const renderInput = (
+  name,
+  label,
+  placeholder,
+  type = 'text',
+  textarea = false
+) => (
   <Field
     name={name}
     label={label}
@@ -23,5 +45,6 @@ export const renderInput = (name, label, placeholder, type = 'text') => (
     component={InputAdapter}
     type={type}
     placeholder={placeholder}
+    textarea={textarea}
   />
 )

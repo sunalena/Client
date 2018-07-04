@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router-dom'
 import { PageWithLink, RightLink } from 'ui'
 
 import LinksList, { LinkListByTag } from './LinksList'
-import LinkPage from './LinkPage'
 import LinkForm from './LinkForm'
 
 const rightLink = url => (

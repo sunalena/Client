@@ -16,7 +16,7 @@ import { theme } from 'styles'
 import 'styles/globalStyles'
 
 const store = configureStore()
-const client = createApolloClient('http://localhost:4000/graphql', store)
+const client = createApolloClient('/graphql', store)
 
 ReactDOM.render(
   <Provider store={store}>

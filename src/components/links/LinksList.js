@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo'
 import gql from 'graphql-tag.macro'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { Loader, Flex, Button, Heading } from 'ui'
+import { Loader, Heading } from 'ui'
 import { SearchInput } from 'components/SearchInput'
 
 import LinkItem from './LinkItem'
@@ -41,16 +41,12 @@ class LinksList extends Component {
     const { nodes = [], pageInfo: { hasNextPage } = {} } = mainQuery
     return (
       <Fragment>
-        <Flex>
-          <SearchInput
-            location={location}
-            history={history}
-            defaultValue={search}
-          />
-          <Button ml={2} onClick={() => refetch()}>
-            Refetch
-          </Button>
-        </Flex>
+        <SearchInput
+          location={location}
+          history={history}
+          defaultValue={search}
+          refetch={refetch}
+        />
         {loading && <Loader />}
         {error && <Heading h3="true">Error</Heading>}
         {!loading &&

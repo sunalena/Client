@@ -2,6 +2,7 @@
   "name": "linkhub_client",
   "version": "0.2.0",
   "private": true,
+  "homepage": "https://linkhub.spsu.ru/",
   "dependencies": {
     "apollo-client-preset": "^1.0.8",
     "apollo-link-error": "^1.1.0",

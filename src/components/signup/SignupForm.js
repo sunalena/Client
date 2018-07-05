@@ -22,7 +22,11 @@ class SignupForm extends React.PureComponent {
     console.log('values', values)
     const { client, signinSuccess, signUp, history } = this.props
     try {
-      const { data } = await signUp({ ...values })
+      const { data } = await signUp({
+        ...values,
+        lastName: '',
+        email: 'test@test.com'
+      })
       const token = data.authenticate.jwtToken
       const userId = data.authenticate.query.currentPerson.userId
       const userName = data.authenticate.query.currentPerson.fullName

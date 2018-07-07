@@ -6,7 +6,7 @@ import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
 import { difference } from 'lodash'
 
-import { Box, Card, Button, CheckBadge as CheckBadgeC, Text, Loader } from 'ui'
+import { Box, Card, Button, CheckBadge as CheckBadgeC, Text } from 'ui'
 import { mutateProp, objectDifference, getPatch } from 'utils'
 import { subscription, renderInput } from 'ui/utils'
 import { SelectionField } from 'components/selectionField'
@@ -29,37 +29,21 @@ const SelectAdapter = ({ input, meta, ...rest }) => (
   <SelectionField {...input} defaultValue={meta.initial} {...rest} />
 )
 
-const getTags = (linkTagsByLinkId = {}) => {
-  const { nodes = [] } = linkTagsByLinkId
-  return nodes.map(({ tagByTagId }) => tagByTagId.id)
-}
-
 class LinkForm extends Component {
-  state = { hash: '' }
-  static getDerivedStateFromProps(nextProps, state) {
-    if (!nextProps.loading && nextProps.hash !== state.hash) {
-      const cSelected = getTags(nextProps.linkTagsByLinkId)
-      return { cSelected, hash: nextProps.hash }
-    }
-    return null
-  }
-
   onSubmit = async ({ tags, ...values }) => {
     const {
       updateLink,
       createLinkTag,
       deleteLinkTag,
       initialValues: { tags: oldTags, ...initialValues } = {},
-      nodeId
+      nodeId,
+      refetch
     } = this.props
     const diff = objectDifference(values, initialValues)
     const linkPatch = getPatch(diff)
     const modifiedTags = difference(tags, oldTags)
 
     try {
-      if (Object.keys(diff).length > 0) {
-        await updateLink({ nodeId, linkPatch })
-      }
       modifiedTags.forEach(tag => {
         const tagId = tag.id
         const linkId = initialValues.id
@@ -69,14 +53,18 @@ class LinkForm extends Component {
           deleteLinkTag({ linkId, tagId })
         }
       })
+      if (Object.keys(diff).length > 0) {
+        await updateLink({ nodeId, linkPatch })
+      } else {
+        refetch()
+      }
     } catch (error) {
       console.log('there was an error sending the query', error)
     }
   }
 
   render() {
-    const { loading, error, initialValues } = this.props
-    if (loading) return <Loader />
+    const { error, initialValues } = this.props
     if (error) return <Text>{JSON.stringify(error)}</Text>
     return (
       <Form
@@ -88,8 +76,22 @@ class LinkForm extends Component {
           <Card is="form" flexDirection="column" onSubmit={handleSubmit}>
             {renderInput('way', 'Link', 'Insert link')}
             {renderInput('title', 'Title', 'Input Title')}
-            {renderInput('preview', 'Preview', 'Input Preview', 'text', true)}
-            {renderInput('imageUrl', 'Image Link', 'Insert image link')}
+            {renderInput(
+              'preview',
+              'Preview',
+              'Input Preview',
+              'text',
+              true,
+              false
+            )}
+            {renderInput(
+              'imageUrl',
+              'Image Link',
+              'Insert image link',
+              null,
+              null,
+              false
+            )}
             <Field
               name="person"
               label="Person"
@@ -191,7 +193,8 @@ const props = ({
     loading,
     error,
     allTags,
-    link: { linkTagsByLinkId, nodeId, ...linkValues } = {}
+    link: { linkTagsByLinkId, nodeId, ...linkValues } = {},
+    refetch
   }
 }) => {
   return {
@@ -204,7 +207,7 @@ const props = ({
     },
     linkTagsByLinkId,
     nodeId,
-    hash: Math.random().toString(36)
+    refetch
   }
 }
 
@@ -214,8 +217,8 @@ const config = {
       params: { linkId: id }
     }
   }) => ({
-    variables: { id, isList: false },
-    fetchPolicy: 'cache-and-network'
+    variables: { id, isList: false }
+    // fetchPolicy: 'cache-and-network'
   }),
   props
 }

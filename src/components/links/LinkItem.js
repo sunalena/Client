@@ -25,7 +25,6 @@ class LinkItem extends Component {
   render() {
     const {
       loading = false,
-      userId,
       title,
       way,
       person = {},
@@ -37,6 +36,7 @@ class LinkItem extends Component {
     } = this.props
     if (loading) return <Loader />
     const postDate = new Date(createdAt)
+    postDate.setMinutes(postDate.getMinutes() - postDate.getTimezoneOffset())
     const tagNodes = linkTagsByLinkId.nodes || []
     const tags =
       tagNodes.length > 0

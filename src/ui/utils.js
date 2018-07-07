@@ -14,9 +14,14 @@ export const InputAdapter = ({
   const InputComponent = textarea ? TextArea : Input
   return (
     <Fragment>
-      <Label>{label}</Label>
+      <Label htmlFor={input.id}>{label}</Label>
       {meta.error &&
-        meta.touched && <Label color="accent"> {meta.error}</Label>}
+        meta.touched && (
+          <Label color="accent" htmlFor={input.id}>
+            {' '}
+            {meta.error}
+          </Label>
+        )}
       <InputComponent
         {...input}
         type={type}
@@ -36,12 +41,13 @@ export const renderInput = (
   label,
   placeholder,
   type = 'text',
-  textarea = false
+  textarea = false,
+  isrequire = true
 ) => (
   <Field
     name={name}
     label={label}
-    validate={required}
+    validate={isrequire ? required : undefined}
     component={InputAdapter}
     type={type}
     placeholder={placeholder}

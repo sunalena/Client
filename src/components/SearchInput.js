@@ -22,7 +22,7 @@ export class SearchInput extends Component {
     const { defaultValue } = this.props
     return (
       <Flex is="form" onSubmit={this.handleSearch}>
-        <Box w={1}>
+        <Box is="label" w={1} htmlFor="search">
           <Input
             w={1}
             id="search"

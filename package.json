@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://linkhub.spsu.ru/",
   "dependencies": {
+    "apollo-cache-persist": "^0.1.1",
     "apollo-client-preset": "^1.0.8",
     "apollo-link-error": "^1.1.0",
     "final-form": "^4.8.3",

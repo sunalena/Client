@@ -7,6 +7,7 @@
     "apollo-cache-persist": "^0.1.1",
     "apollo-client-preset": "^1.0.8",
     "apollo-link-error": "^1.1.0",
+    "apollo-link-retry": "^2.2.4",
     "final-form": "^4.8.3",
     "final-form-arrays": "^1.0.4",
     "react": "^16.4.1",
@@ -31,7 +32,7 @@
     "eject": "react-scripts eject",
     "flow": "flow"
   },
-  "proxy": "http://localhost:4000",
+  "proxy": "https://linkhub.spsu.ru/",
   "devDependencies": {
     "babel-literal-to-ast": "^2.0.0",
     "graphql-tag.macro": "^1.0.1"

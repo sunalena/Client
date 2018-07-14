@@ -18,18 +18,6 @@ export default (uri, store) => {
     return forward(operation)
   })
 
-  // const errorLink = onError(({ networkError, graphQLErrors }) => {
-  //   if (networkError) {
-  //     if (networkError.response.status === 403) {
-  //       store.dispatch(signoutSuccess())
-  //       console.log('error', 403)
-  //     } else if (networkError.response.status === 401) {
-  //       store.dispatch(signoutSuccess())
-  //       console.log('error', 401)
-  //     }
-  //   }
-  // })
-
   const errorLink = onError(({ networkError, graphQLErrors }) => {
     if (graphQLErrors)
       graphQLErrors.map(({ message, locations, path, ...rest }) =>

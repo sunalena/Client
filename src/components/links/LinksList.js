@@ -147,7 +147,8 @@ const configObject = {
   options: ({ location, match }) => {
     const search = new URLSearchParams(location.search).get('search') || ''
     return {
-      variables: { search, first: 5, ...match.params }
+      variables: { search, first: 5, ...match.params },
+      context: { debounceKey: '1' }
       // fetchPolicy: 'network-only'
     }
   },

@@ -2,6 +2,7 @@ import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
 import { RetryLink } from 'apollo-link-retry'
+import DebounceLink from 'apollo-link-debounce'
 
 import { signoutSuccess } from 'redux/modules/auth'
 
@@ -17,6 +18,18 @@ export default (uri, store) => {
     }
     return forward(operation)
   })
+
+  // const errorLink = onError(({ networkError, graphQLErrors }) => {
+  //   if (networkError) {
+  //     if (networkError.response.status === 403) {
+  //       store.dispatch(signoutSuccess())
+  //       console.log('error', 403)
+  //     } else if (networkError.response.status === 401) {
+  //       store.dispatch(signoutSuccess())
+  //       console.log('error', 401)
+  //     }
+  //   }
+  // })
 
   const errorLink = onError(({ networkError, graphQLErrors }) => {
     if (graphQLErrors)
@@ -46,5 +59,11 @@ export default (uri, store) => {
       }
     }
   })
-  return ApolloLink.from([authLink, retryLink, errorLink, httpLink])
+  return ApolloLink.from([
+    new DebounceLink(200),
+    authLink,
+    retryLink,
+    errorLink,
+    httpLink
+  ])
 }
